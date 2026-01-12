@@ -15,9 +15,12 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "test": "npm run test:jest && npm run test:pw",
+    "test:jest": "jest",
+    "test:pw": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "playwright": "^1.57.0"

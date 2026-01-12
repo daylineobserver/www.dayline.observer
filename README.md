@@ -41,6 +41,31 @@ npx serve .
 ```
 Then navigate to the URL provided in the terminal (usually `http://localhost:3000`).
 
+## Testing
+
+The project uses Jest for unit testing and Playwright for visual snapshot testing.
+
+### Run all tests
+```bash
+npm test
+```
+
+### Run Jest tests only
+```bash
+npm run test:jest
+```
+
+### Run Playwright tests only
+```bash
+npm run test:pw
+```
+
+### Update Playwright Snapshots
+If the UI changes are intentional, update the baseline snapshots:
+```bash
+npx playwright test --update-snapshots
+```
+
 ## Project Structure
 - `index.html`: Main HTML structure.
 - `style.css`: Custom CSS for specific components.
