@@ -3,6 +3,13 @@ const fixtures = require('./fixtures');
 const dayjs = require('dayjs');
 const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
+global.DOMPurify = DOMPurify;
+global.document = window.document;
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -128,6 +135,92 @@ describe('api methods', () => {
         const data = await api.getAirQuality();
         expect(global.fetch).toHaveBeenCalledWith("https://api.remindify.me/aqi");
         expect(data).toEqual(fixtures.airQuality);
+    });
+
+    test('getNews should fetch from the correct URL', async () => {
+        global.fetch.mockResolvedValue({
+            json: jest.fn().mockResolvedValue(fixtures.news)
+        });
+
+        const data = await api.getNews();
+        expect(global.fetch).toHaveBeenCalledWith("https://api.remindify.me/news");
+        expect(data).toEqual(fixtures.news);
+    });
+});
+
+describe('XSS Protection', () => {
+    let contentArea;
+
+    beforeEach(() => {
+        document.body.innerHTML = '<div id="content-area"></div>';
+        contentArea = document.getElementById('content-area');
+        UI.contentArea = contentArea;
+    });
+
+    test('renderWeather should sanitize HTML injection in title and body', () => {
+        const maliciousData = {
+            title: 'Weather <img src=x onerror=alert(1)>',
+            body: 'Safe body <script>alert("xss")</script>',
+            body1: 'Safe body 1 <iframe src="javascript:alert(1)"></iframe>',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderWeather(maliciousData);
+
+        const html = contentArea.innerHTML;
+        expect(html).not.toContain('onerror=alert(1)');
+        expect(html).not.toContain('<script>');
+        expect(html).not.toContain('<iframe');
+        expect(html).toContain('Weather <img src="x">');
+    });
+
+    test('renderEDB should sanitize HTML injection', () => {
+        const maliciousData = {
+            id: 'edb <svg onload=alert(1)>',
+            body: 'Alert message <img src=x onerror=alert(1)>',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderEDB(maliciousData);
+
+        const html = contentArea.innerHTML;
+        expect(html).not.toContain('onload=alert(1)');
+        expect(html).not.toContain('onerror=alert(1)');
+    });
+
+    test('renderAirQuality should sanitize HTML injection', () => {
+        const maliciousData = {
+            body: 'Warnings <script>alert(1)</script>',
+            body1: 'Readings <img src=x onerror=alert(1)>',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderAirQuality(maliciousData);
+
+        const html = contentArea.innerHTML;
+        expect(html).not.toContain('<script>');
+        expect(html).not.toContain('onerror=alert(1)');
+    });
+
+    test('renderNews should sanitize HTML injection after markdown parsing', () => {
+        const maliciousData = {
+            title: 'News <img src=x onerror=alert(1)>',
+            body: 'Markdown body <a href="javascript:alert(1)">click me</a>',
+            body1: 'Footer <script>alert(1)</script>',
+            formattedDate: '(10:00AM)'
+        };
+
+        // Mock marked
+        global.marked = {
+            parse: (text) => text
+        };
+
+        UI.renderNews(maliciousData);
+
+        const html = contentArea.innerHTML;
+        expect(html).not.toContain('onerror=alert(1)');
+        expect(html).not.toContain('javascript:alert(1)');
+        expect(html).not.toContain('<script>');
     });
 });
 

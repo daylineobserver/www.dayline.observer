@@ -9,6 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/timezone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
     <script>
         if (typeof dayjs !== 'undefined' && typeof dayjs_plugin_utc !== 'undefined') {
             dayjs.extend(dayjs_plugin_utc);
@@ -38,7 +40,11 @@
             </div>
             <nav class="ml-10 flex space-x-8">
                 <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-          Screenshot from 2026-01-21 16-08-46              id="tab-weather">
+                        id="tab-news">
+                    News
+                </button>
+                <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        id="tab-weather">
                     Weather
                 </button>
                 <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"

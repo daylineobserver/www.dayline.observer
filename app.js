@@ -11,6 +11,10 @@ const api = {
     getAirQuality: async () => {
         const res = await fetch(URL + "/aqi")
         return res.json()
+    },
+    getNews: async () => {
+        const res = await fetch(URL + "/news")
+        return res.json()
     }
 };
 
@@ -32,7 +36,7 @@ const UI = {
         });
 
         // Default tab
-        const savedTab = localStorage.getItem('activeTab') || 'weather';
+        const savedTab = localStorage.getItem('activeTab') || 'news';
         this.switchTab(savedTab);
     },
 
@@ -68,6 +72,10 @@ const UI = {
                 data = await api.getAirQuality();
                 this.formatData(data);
                 this.renderAirQuality(data);
+            } else if (tabId === 'news') {
+                data = await api.getNews();
+                this.formatData(data);
+                this.renderNews(data);
             }
         } catch (error) {
             this.contentArea.innerHTML = `<div class="text-red-500">Error loading data.</div>`;
@@ -115,43 +123,53 @@ const UI = {
     },
 
     renderWeather: function(data) {
+        const title = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.title) : data.title;
+        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body) : data.body;
+        const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
+
         this.contentArea.innerHTML = `
             <div class="alert-banner flex items-center gap-3">
                 <span class="text-blue-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </span>
-                <span class="text-gray-700 font-medium">${data.title}</span>
+                <span class="text-gray-700 font-medium">${title}</span>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-2 card">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Weather ${data.formattedDate}</h2>
                     
                     <div class="space-y-6 text-gray-600 whitespace-pre-line">
-                        ${data.body}
+                        ${body}
                     </div>
                 </div>
 
                 <div class="card">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Summary</h2>
-                    <p class="text-gray-600 leading-relaxed whitespace-pre-line">${data.body1}</p>
+                    <p class="text-gray-600 leading-relaxed whitespace-pre-line">${body1}</p>
                 </div>
             </div>
         `;
     },
 
     renderEDB: function(data) {
+        const id = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.id) : data.id;
+        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body) : data.body;
+
         this.contentArea.innerHTML = `
             <div class="max-w-2xl mx-left card">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">${data.id.toUpperCase()} Alert ${data.formattedDate}</h2>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">${id.toUpperCase()} Alert ${data.formattedDate}</h2>
                 
                 <div class="space-y-6 text-gray-600 whitespace-pre-line">
-                    ${data.body}
+                    ${body}
                 </div>
             </div>
         `;
     },
 
     renderAirQuality: function(data) {
+        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body) : data.body;
+        const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
+
         this.contentArea.innerHTML = `
             <div class="max-w-2xl mx-left card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
@@ -161,13 +179,35 @@ const UI = {
                 <div class="space-y-4 text-gray-600">
                     <div class="whitespace-pre-line">
                         <p class="font-semibold text-gray-800 mb-1">Warnings:</p>
-                        ${data.body}
+                        ${body}
                     </div>
                     <div class="whitespace-pre-line">
                         <p class="font-semibold text-gray-800 mb-1">Station Readings:</p>
-                        ${data.body1}
+                        ${body1}
                     </div>
                 </div>
+            </div>
+        `;
+    },
+
+    renderNews: function(data) {
+        let bodyHtml = data.body;
+        if (typeof marked !== 'undefined' && marked.parse) {
+            bodyHtml = marked.parse(data.body);
+        }
+
+        const title = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.title) : data.title;
+        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
+        const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
+
+        this.contentArea.innerHTML = `
+            <div class="max-w-2xl mx-left card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">${title} ${data.formattedDate}</h2>
+                
+                <div class="space-y-6 text-gray-600 markdown-content">
+                    ${body}
+                </div>
+                ${body1 ? `<div class="mt-6 pt-6 border-t border-gray-100 text-gray-500 text-sm italic">${body1}</div>` : ''}
             </div>
         `;
     }

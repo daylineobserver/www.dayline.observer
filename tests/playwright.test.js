@@ -14,12 +14,15 @@ test.describe('Remindify Visual Snapshots', () => {
     await page.route('**/aqi', async route => {
       await route.fulfill({ json: fixtures.airQuality });
     });
+    await page.route('**/news', async route => {
+      await route.fulfill({ json: fixtures.news });
+    });
 
     // Navigate to the local index.html
     const url = 'file://' + path.resolve(__dirname, '../index.html');
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     // Wait for the initial load
-    await page.waitForSelector('#tab-weather');
+    await page.waitForSelector('#tab-news');
   });
 
   test('should match the weather page snapshot', async ({ page }) => {
@@ -42,5 +45,12 @@ test.describe('Remindify Visual Snapshots', () => {
     // Wait for the Air Quality content
     await page.waitForSelector('text=Air Quality Alert');
     await expect(page).toHaveScreenshot('air-quality-page.png');
+  });
+
+  test('should match the news page snapshot', async ({ page }) => {
+    await page.click('#tab-news');
+    // Wait for the News content (title is "Latest News Update")
+    await page.waitForSelector('text=Latest News Update');
+    await expect(page).toHaveScreenshot('news-page.png');
   });
 });
