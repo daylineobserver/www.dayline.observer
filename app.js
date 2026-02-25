@@ -1,4 +1,4 @@
-const URL = "https://api.remindify.me"
+const URL = "https://api.dayline.observer"
 const api = {
     getWeather: async () => {
         const res = await fetch(URL + "/weather")
@@ -178,7 +178,7 @@ const UI = {
                 
                 <div class="space-y-4 text-gray-600">
                     <div class="whitespace-pre-line">
-                        <p class="font-semibold text-gray-800 mb-1">Warnings:</p>
+                        <p class="font-semibold text-gray-800 mb-1">Commentary:</p>
                         ${body}
                     </div>
                     <div class="whitespace-pre-line">

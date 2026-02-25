@@ -1,14 +1,14 @@
 {
-  "name": "www.remindify.me",
+  "name": "www.dayline.observer",
   "version": "1.0.0",
   "description": "A web application that displays weather, EDB alerts, and air quality information for Hong Kong.",
-  "homepage": "https://github.com/remindify/www.remindify.me#readme",
+  "homepage": "https://github.com/daylineobserver/www.dayline.observer#readme",
   "bugs": {
-    "url": "https://github.com/remindify/www.remindify.me/issues"
+    "url": "https://github.com/daylineobserver/www.dayline.observer/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/remindify/www.remindify.me.git"
+    "url": "git+https://github.com/daylineobserver/www.dayline.observer.git"
   },
   "license": "ISC",
   "author": "",

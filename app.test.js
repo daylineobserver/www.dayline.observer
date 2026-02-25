@@ -15,6 +15,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 global.dayjs = dayjs;
 
+const API_URL = 'https://api.dayline.observer'
+
 describe('UI.formatData', () => {
     test('should replace literal \\n with actual newline characters', () => {
         const data = {
@@ -113,7 +115,7 @@ describe('api methods', () => {
         });
 
         const data = await api.getWeather();
-        expect(global.fetch).toHaveBeenCalledWith("https://api.remindify.me/weather");
+        expect(global.fetch).toHaveBeenCalledWith(API_URL + "/weather");
         expect(data).toEqual(fixtures.weather);
     });
 
@@ -123,7 +125,7 @@ describe('api methods', () => {
         });
 
         const data = await api.getEDB();
-        expect(global.fetch).toHaveBeenCalledWith("https://api.remindify.me/edb");
+        expect(global.fetch).toHaveBeenCalledWith(API_URL + "/edb");
         expect(data).toEqual(fixtures.edb);
     });
 
@@ -133,7 +135,7 @@ describe('api methods', () => {
         });
 
         const data = await api.getAirQuality();
-        expect(global.fetch).toHaveBeenCalledWith("https://api.remindify.me/aqi");
+        expect(global.fetch).toHaveBeenCalledWith(API_URL + "/aqi");
         expect(data).toEqual(fixtures.airQuality);
     });
 
@@ -143,7 +145,7 @@ describe('api methods', () => {
         });
 
         const data = await api.getNews();
-        expect(global.fetch).toHaveBeenCalledWith("https://api.remindify.me/news");
+        expect(global.fetch).toHaveBeenCalledWith(API_URL + "/news");
         expect(data).toEqual(fixtures.news);
     });
 });

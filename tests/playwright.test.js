@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import path from 'path';
 import fixtures from '../fixtures.js';
 
-test.describe('Remindify Visual Snapshots', () => {
+test.describe('Dayline Observer Visual Snapshots', () => {
   test.beforeEach(async ({ page }) => {
     // Intercept API calls and return fixtures
     await page.route('**/weather', async route => {

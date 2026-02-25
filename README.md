@@ -1,4 +1,4 @@
-# Remindify Channel
+# Dayline Observer
 
 A web application that displays weather, EDB alerts, and air quality information for Hong Kong.
 
@@ -6,7 +6,7 @@ A web application that displays weather, EDB alerts, and air quality information
 - **Tabbed Navigation**: Switch between Weather, EDB, and Air Quality views.
 - **Dynamic Data**: Simulates fetching data from backend APIs with loading states.
 - **Responsive Design**: Mobile-friendly layout using Tailwind CSS.
-- **Faithful Recreation**: Visuals based on the Remindify Channel design.
+- **Faithful Recreation**: Visuals based on the Dayline Observer design.
 
 ## Technologies Used
 - HTML5
