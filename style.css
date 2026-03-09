@@ -26,9 +26,12 @@
 }
 
 /* Markdown Content Styling */
+.markdown-content {
+}
+
 .markdown-content ul, .markdown-content ol {
     margin-left: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .markdown-content ul {
@@ -40,30 +43,30 @@
 }
 
 .markdown-content li {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.125rem;
 }
 
 .markdown-content h1 {
     font-size: 1.875rem;
     font-weight: 700;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .markdown-content h2 {
     font-size: 1.5rem;
     font-weight: 700;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .markdown-content h3 {
     font-size: 1.25rem;
     font-weight: 700;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .markdown-content p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }

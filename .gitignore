@@ -143,3 +143,5 @@ vite.config.ts.timestamp-*
 .idea
 
 playwright-report
+
+test-results
