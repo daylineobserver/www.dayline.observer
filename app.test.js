@@ -200,6 +200,23 @@ describe('XSS Protection', () => {
         expect(html).not.toContain('onerror=alert(1)');
     });
 
+    test('renderAirQuality should render markdown if marked is present', () => {
+        global.marked = {
+            parse: (text) => `<p>${text}</p>`
+        };
+        const data = {
+            body: 'Commentary **bold**',
+            body1: 'Readings *italic*',
+            formattedDate: '(10:00AM)'
+        };
+        UI.renderAirQuality(data);
+        const html = UI.contentArea.innerHTML;
+        expect(html).toContain('<p>Commentary **bold**</p>');
+        expect(html).toContain('<p>Readings *italic*</p>');
+        expect(html).toContain('markdown-content');
+        delete global.marked;
+    });
+
     test('renderAirQuality should sanitize HTML injection', () => {
         const maliciousData = {
             body: 'Warnings <script>alert(1)</script>',
