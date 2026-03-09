@@ -49,6 +49,8 @@ test.describe('Dayline Observer Visual Snapshots', () => {
 
   test('should match the news page snapshot', async ({ page }) => {
     await page.click('#tab-news');
+    // Click Morning sub-tab to be sure (since default depends on time)
+    await page.click('#news-morning');
     // Wait for the News content (title is "Latest News Update")
     await page.waitForSelector('text=Latest News Update');
     await expect(page).toHaveScreenshot('news-page.png');

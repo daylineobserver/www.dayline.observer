@@ -26,6 +26,13 @@ const fixtures = {
         body: "### Breaking: New discovery in quantum computing\\n\\nScientists have announced a major breakthrough in quantum stability. This could lead to:\\n\\n- **Faster** processing\\n- More *secure* communications\\n- Efficient energy usage\\n\\nIn other news, the local park has reopened.\\n\\n**IMPORTANT NOTE**: This is a bold line that should NOT have a bullet point.\\n\\n- This is a normal list item with -",
         body1: "Full story on page 5.",
         updated_at: "2026-01-12T10:00:53Z"
+    },
+    newsEvening: {
+        id: "news-evening",
+        title: "Evening News Update",
+        body: "### Evening Report: Markets closed higher\\n\\nToday's highlights:\\n- Tech stocks rallied\\n- Energy prices stabilized\\n\\nTomorrow's outlook remains positive.",
+        body1: "More updates at 11 PM.",
+        updated_at: "2026-01-12T18:00:00Z"
     }
 };
 
