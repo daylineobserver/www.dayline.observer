@@ -150,19 +150,19 @@ const UI = {
         }
     },
 
-    renderWeather: function(data) {
-        let bodyHtml = data.body;
+    parseMarkdown: function(text) {
+        if (!text) return '';
+        let bodyHtml = text;
         if (typeof marked !== 'undefined' && marked.parse) {
-            bodyHtml = marked.parse(data.body);
+            bodyHtml = marked.parse(text);
         }
-        let body1Html = data.body1;
-        if (typeof marked !== 'undefined' && marked.parse) {
-            body1Html = marked.parse(data.body1);
-        }
+        return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
+    },
 
+    renderWeather: function(data) {
         const title = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.title) : data.title;
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
-        const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(body1Html) : body1Html;
+        const body = this.parseMarkdown(data.body);
+        const body1 = this.parseMarkdown(data.body1);
 
         this.contentArea.innerHTML = `
             <div class="alert-banner flex items-center gap-3">
@@ -189,13 +189,8 @@ const UI = {
     },
 
     renderEDB: function(data) {
-        let bodyHtml = data.body;
-        if (typeof marked !== 'undefined' && marked.parse) {
-            bodyHtml = marked.parse(data.body);
-        }
-
         const id = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.id) : data.id;
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
+        const body = this.parseMarkdown(data.body);
 
         this.contentArea.innerHTML = `
             <div class="max-w-2xl mx-left card">
@@ -209,17 +204,8 @@ const UI = {
     },
 
     renderAirQuality: function(data) {
-        let bodyHtml = data.body;
-        if (typeof marked !== 'undefined' && marked.parse) {
-            bodyHtml = marked.parse(data.body);
-        }
-        let body1Html = data.body1;
-        if (typeof marked !== 'undefined' && marked.parse) {
-            body1Html = marked.parse(data.body1);
-        }
-
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
-        const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(body1Html) : body1Html;
+        const body = this.parseMarkdown(data.body);
+        const body1 = this.parseMarkdown(data.body1);
 
         this.contentArea.innerHTML = `
             <div class="max-w-2xl mx-left card">
@@ -242,13 +228,8 @@ const UI = {
     },
 
     renderNews: function(data, type = 'morning') {
-        let bodyHtml = data.body;
-        if (typeof marked !== 'undefined' && marked.parse) {
-            bodyHtml = marked.parse(data.body);
-        }
-
         const title = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.title) : data.title;
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
+        const body = this.parseMarkdown(data.body);
         const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
 
         this.contentArea.innerHTML = `

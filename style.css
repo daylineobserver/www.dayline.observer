@@ -26,6 +26,10 @@
 }
 
 /* Markdown Content Styling */
+.markdown-content {
+    white-space: pre-line;
+}
+
 .markdown-content ul, .markdown-content ol {
     margin-left: 1.5rem;
     margin-bottom: 1rem;

@@ -18,6 +18,19 @@ global.dayjs = dayjs;
 const API_URL = 'https://api.dayline.observer'
 
 describe('UI.formatData', () => {
+    let originalDayjs;
+    let originalGuess;
+
+    beforeEach(() => {
+        originalDayjs = global.dayjs;
+        originalGuess = dayjs.tz.guess;
+    });
+
+    afterEach(() => {
+        global.dayjs = originalDayjs;
+        dayjs.tz.guess = originalGuess;
+    });
+
     test('should replace literal \\n with actual newline characters', () => {
         const data = {
             body: "Line 1\\nLine 2",
@@ -39,7 +52,6 @@ describe('UI.formatData', () => {
     });
 
     test('should format updated_at into formattedDate (fallback when dayjs is missing)', () => {
-        const originalDayjs = global.dayjs;
         delete global.dayjs;
         
         const data = {
@@ -48,13 +60,10 @@ describe('UI.formatData', () => {
         UI.formatData(data);
         // Fallback formatting: (10:00AM | Mon | 12 Jan, 2026)
         expect(data.formattedDate).toBe("(10:00AM | Mon | 12 Jan, 2026)");
-        
-        global.dayjs = originalDayjs;
     });
 
     test('should format updated_at using dayjs in UTC', () => {
         // Mock timezone guess
-        const originalGuess = dayjs.tz.guess;
         dayjs.tz.guess = () => 'UTC';
 
         const data = {
@@ -63,13 +72,10 @@ describe('UI.formatData', () => {
         UI.formatData(data);
         // Expect: (10:00AM | Mon | 12 Jan, 2026) UTC
         expect(data.formattedDate).toBe("(10:00AM | Mon | 12 Jan, 2026 UTC)");
-
-        dayjs.tz.guess = originalGuess;
     });
 
     test('should format updated_at using dayjs in Asia/Hong_Kong', () => {
         // Mock timezone guess
-        const originalGuess = dayjs.tz.guess;
         dayjs.tz.guess = () => 'Asia/Hong_Kong';
 
         const data = {
@@ -79,13 +85,10 @@ describe('UI.formatData', () => {
         // 2026-01-12 10:00:53 UTC is 2026-01-12 18:00:53 HKT
         // Note: Intl.DateTimeFormat might return 'GMT+8' instead of 'HKT' depending on the environment
         expect(["(6:00PM | Mon | 12 Jan, 2026 HKT)", "(6:00PM | Mon | 12 Jan, 2026 GMT+8)"]).toContain(data.formattedDate);
-
-        dayjs.tz.guess = originalGuess;
     });
 
     test('should format updated_at using dayjs in America/New_York', () => {
         // Mock timezone guess
-        const originalGuess = dayjs.tz.guess;
         dayjs.tz.guess = () => 'America/New_York';
 
         const data = {
@@ -95,8 +98,6 @@ describe('UI.formatData', () => {
         // 2026-01-12 10:00:53 UTC is 2026-01-12 05:00:53 EST
         // Note: Intl.DateTimeFormat might return 'GMT-5' instead of 'EST' depending on the environment
         expect(["(5:00AM | Mon | 12 Jan, 2026 EST)", "(5:00AM | Mon | 12 Jan, 2026 GMT-5)"]).toContain(data.formattedDate);
-
-        dayjs.tz.guess = originalGuess;
     });
 });
 
@@ -162,11 +163,17 @@ describe('api methods', () => {
 
 describe('XSS Protection', () => {
     let contentArea;
+    let originalMarked;
 
     beforeEach(() => {
         document.body.innerHTML = '<div id="content-area"></div>';
         contentArea = document.getElementById('content-area');
         UI.contentArea = contentArea;
+        originalMarked = global.marked;
+    });
+
+    afterEach(() => {
+        global.marked = originalMarked;
     });
 
     test('renderWeather should sanitize HTML injection in title and body', () => {
@@ -214,7 +221,36 @@ describe('XSS Protection', () => {
         expect(html).toContain('<p>Commentary **bold**</p>');
         expect(html).toContain('<p>Readings *italic*</p>');
         expect(html).toContain('markdown-content');
-        delete global.marked;
+    });
+
+    test('renderWeather should render markdown if marked is present', () => {
+        global.marked = {
+            parse: (text) => `<div>${text}</div>`
+        };
+        const data = {
+            title: 'Weather',
+            body: 'Body markdown',
+            body1: 'Summary markdown',
+            formattedDate: '(10:00AM)'
+        };
+        UI.renderWeather(data);
+        const html = UI.contentArea.innerHTML;
+        expect(html).toContain('<div>Body markdown</div>');
+        expect(html).toContain('<div>Summary markdown</div>');
+    });
+
+    test('renderEDB should render markdown if marked is present', () => {
+        global.marked = {
+            parse: (text) => `<span>${text}</span>`
+        };
+        const data = {
+            id: 'edb',
+            body: 'EDB body markdown',
+            formattedDate: '(10:00AM)'
+        };
+        UI.renderEDB(data);
+        const html = UI.contentArea.innerHTML;
+        expect(html).toContain('<span>EDB body markdown</span>');
     });
 
     test('renderAirQuality should sanitize HTML injection', () => {
@@ -226,9 +262,25 @@ describe('XSS Protection', () => {
 
         UI.renderAirQuality(maliciousData);
 
-        const html = contentArea.innerHTML;
+        const html = UI.contentArea.innerHTML;
         expect(html).not.toContain('<script>');
         expect(html).not.toContain('onerror=alert(1)');
+    });
+
+    test('markdown-content should preserve newlines when marked is absent', () => {
+        // Ensure marked is NOT present
+        delete global.marked;
+
+        const data = {
+            id: 'edb',
+            body: "Line 1\nLine 2",
+            formattedDate: '(10:00AM)'
+        };
+        UI.renderEDB(data);
+        const html = UI.contentArea.innerHTML;
+        // Since we are using innerHTML and parseMarkdown returns sanitized string, 
+        // "Line 1\nLine 2" should be present as is in the DOM (though browsers might normalize it, JSDOM should keep it)
+        expect(html).toContain("Line 1\nLine 2");
     });
 
     test('renderNews should sanitize HTML injection after markdown parsing', () => {
