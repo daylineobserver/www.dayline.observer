@@ -154,7 +154,11 @@ const UI = {
         if (!text) return '';
         let bodyHtml = text;
         if (typeof marked !== 'undefined' && marked.parse) {
-            bodyHtml = marked.parse(text);
+            // marked v12+ use options in parse or marked.setOptions
+            bodyHtml = marked.parse(text, { gfm: true, breaks: true });
+        } else {
+            // Fallback: replace \n with <br>
+            bodyHtml = text.replace(/\n/g, '<br>');
         }
         return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
     },

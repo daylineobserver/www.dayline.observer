@@ -278,9 +278,8 @@ describe('XSS Protection', () => {
         };
         UI.renderEDB(data);
         const html = UI.contentArea.innerHTML;
-        // Since we are using innerHTML and parseMarkdown returns sanitized string, 
-        // "Line 1\nLine 2" should be present as is in the DOM (though browsers might normalize it, JSDOM should keep it)
-        expect(html).toContain("Line 1\nLine 2");
+        // With the new fallback, \n should be converted to <br>
+        expect(html).toContain("Line 1<br>Line 2");
     });
 
     test('renderNews should sanitize HTML injection after markdown parsing', () => {

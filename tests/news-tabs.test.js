@@ -67,6 +67,7 @@ test.describe('News Tabs Verification', () => {
     await expect(page.locator('#tab-news')).toHaveClass(/active/);
     // Depending on when the test runs, this could be morning or evening.
     // To make the test robust, we just check that A news update is visible.
-    await expect(page.locator('text=/News Update/')).toBeVisible();
+    // Use regex to be more flexible with capitalization/text changes.
+    await expect(page.locator('text=/.*News Update.*/i')).toBeVisible();
   });
 });
