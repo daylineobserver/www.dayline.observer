@@ -150,10 +150,23 @@ const UI = {
         }
     },
 
+    parseMarkdown: function(text) {
+        if (!text) return '';
+        let bodyHtml = text;
+        if (typeof marked !== 'undefined' && marked.parse) {
+            // marked v12+ use options in parse or marked.setOptions
+            bodyHtml = marked.parse(text, { gfm: true, breaks: true });
+        } else {
+            // Fallback: replace \n with <br>
+            bodyHtml = text.replace(/\n/g, '<br>');
+        }
+        return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
+    },
+
     renderWeather: function(data) {
         const title = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.title) : data.title;
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body) : data.body;
-        const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
+        const body = this.parseMarkdown(data.body);
+        const body1 = this.parseMarkdown(data.body1);
 
         this.contentArea.innerHTML = `
             <div class="alert-banner flex items-center gap-3">
@@ -166,14 +179,14 @@ const UI = {
                 <div class="md:col-span-2 card">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Weather ${data.formattedDate}</h2>
                     
-                    <div class="space-y-6 text-gray-600 whitespace-pre-line">
+                    <div class="space-y-6 text-gray-600 markdown-content">
                         ${body}
                     </div>
                 </div>
 
                 <div class="card">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Summary</h2>
-                    <p class="text-gray-600 leading-relaxed whitespace-pre-line">${body1}</p>
+                    <div class="text-gray-600 leading-relaxed markdown-content">${body1}</div>
                 </div>
             </div>
         `;
@@ -181,13 +194,13 @@ const UI = {
 
     renderEDB: function(data) {
         const id = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.id) : data.id;
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body) : data.body;
+        const body = this.parseMarkdown(data.body);
 
         this.contentArea.innerHTML = `
             <div class="max-w-2xl mx-left card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">${id.toUpperCase()} Alert ${data.formattedDate}</h2>
                 
-                <div class="space-y-6 text-gray-600 whitespace-pre-line">
+                <div class="space-y-6 text-gray-600 markdown-content">
                     ${body}
                 </div>
             </div>
@@ -195,8 +208,8 @@ const UI = {
     },
 
     renderAirQuality: function(data) {
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body) : data.body;
-        const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
+        const body = this.parseMarkdown(data.body);
+        const body1 = this.parseMarkdown(data.body1);
 
         this.contentArea.innerHTML = `
             <div class="max-w-2xl mx-left card">
@@ -205,11 +218,11 @@ const UI = {
                 </h2>
                 
                 <div class="space-y-4 text-gray-600">
-                    <div class="whitespace-pre-line">
+                    <div class="markdown-content">
                         <p class="font-semibold text-gray-800 mb-1">Commentary:</p>
                         ${body}
                     </div>
-                    <div class="whitespace-pre-line">
+                    <div class="markdown-content">
                         <p class="font-semibold text-gray-800 mb-1">Station Readings:</p>
                         ${body1}
                     </div>
@@ -219,13 +232,8 @@ const UI = {
     },
 
     renderNews: function(data, type = 'morning') {
-        let bodyHtml = data.body;
-        if (typeof marked !== 'undefined' && marked.parse) {
-            bodyHtml = marked.parse(data.body);
-        }
-
         const title = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.title) : data.title;
-        const body = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(bodyHtml) : bodyHtml;
+        const body = this.parseMarkdown(data.body);
         const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
 
         this.contentArea.innerHTML = `
