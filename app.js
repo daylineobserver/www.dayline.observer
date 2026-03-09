@@ -15,6 +15,10 @@ const api = {
     getNews: async () => {
         const res = await fetch(URL + "/news")
         return res.json()
+    },
+    getEveningNews: async () => {
+        const res = await fetch(URL + "/news1")
+        return res.json()
     }
 };
 
@@ -30,20 +34,40 @@ const UI = {
         this.tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const tabId = tab.id.replace('tab-', '');
-                localStorage.setItem('activeTab', tabId);
-                this.switchTab(tabId);
+                if (tabId === 'news') {
+                    const newsTabId = this.getDefaultNewsTab();
+                    localStorage.setItem('activeTab', newsTabId);
+                    this.switchTab(newsTabId);
+                } else {
+                    localStorage.setItem('activeTab', tabId);
+                    this.switchTab(tabId);
+                }
             });
         });
 
         // Default tab
-        const savedTab = localStorage.getItem('activeTab') || 'news';
+        let savedTab = localStorage.getItem('activeTab');
+        if (!savedTab || !['weather', 'edb', 'air-quality', 'news', 'news-evening'].includes(savedTab)) {
+            savedTab = this.getDefaultNewsTab();
+        }
+        localStorage.setItem('activeTab', savedTab);
         this.switchTab(savedTab);
+    },
+
+    getDefaultNewsTab: function() {
+        const hour = new Date().getHours();
+        // Morning: 7:00 AM to 6:59 PM (7 to 18)
+        // Evening: 7:00 PM to 6:59 AM (19 to 6)
+        if (hour >= 19 || hour < 7) {
+            return 'news-evening';
+        }
+        return 'news';
     },
 
     switchTab: async function(tabId) {
         // Update tab UI
         this.tabs.forEach(tab => {
-            if (tab.id === `tab-${tabId}`) {
+            if (tab.id === `tab-${tabId}` || (tabId === 'news-evening' && tab.id === 'tab-news')) {
                 tab.classList.add('active');
             } else {
                 tab.classList.remove('active');
@@ -72,10 +96,14 @@ const UI = {
                 data = await api.getAirQuality();
                 this.formatData(data);
                 this.renderAirQuality(data);
-            } else if (tabId === 'news') {
-                data = await api.getNews();
+            } else if (tabId === 'news' || tabId === 'news-evening') {
+                if (tabId === 'news-evening') {
+                    data = await api.getEveningNews();
+                } else {
+                    data = await api.getNews();
+                }
                 this.formatData(data);
-                this.renderNews(data);
+                this.renderNews(data, tabId === 'news-evening' ? 'evening' : 'morning');
             }
         } catch (error) {
             this.contentArea.innerHTML = `<div class="text-red-500">Error loading data.</div>`;
@@ -190,7 +218,7 @@ const UI = {
         `;
     },
 
-    renderNews: function(data) {
+    renderNews: function(data, type = 'morning') {
         let bodyHtml = data.body;
         if (typeof marked !== 'undefined' && marked.parse) {
             bodyHtml = marked.parse(data.body);
@@ -201,6 +229,16 @@ const UI = {
         const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
 
         this.contentArea.innerHTML = `
+            <div class="mb-6 border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                    <button class="news-tab-btn py-4 px-1 border-b-2 font-medium text-sm ${type === 'morning' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" id="news-morning">
+                        Morning
+                    </button>
+                    <button class="news-tab-btn py-4 px-1 border-b-2 font-medium text-sm ${type === 'evening' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" id="news-evening">
+                        Evening
+                    </button>
+                </nav>
+            </div>
             <div class="max-w-2xl mx-left card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">${title} ${data.formattedDate}</h2>
                 
@@ -210,6 +248,15 @@ const UI = {
                 ${body1 ? `<div class="mt-6 pt-6 border-t border-gray-100 text-gray-500 text-sm italic">${body1}</div>` : ''}
             </div>
         `;
+
+        document.getElementById('news-morning').onclick = () => {
+            localStorage.setItem('activeTab', 'news');
+            this.switchTab('news');
+        };
+        document.getElementById('news-evening').onclick = () => {
+            localStorage.setItem('activeTab', 'news-evening');
+            this.switchTab('news-evening');
+        };
     }
 };
 

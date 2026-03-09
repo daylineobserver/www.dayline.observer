@@ -148,6 +148,16 @@ describe('api methods', () => {
         expect(global.fetch).toHaveBeenCalledWith(API_URL + "/news");
         expect(data).toEqual(fixtures.news);
     });
+
+    test('getEveningNews should fetch from the correct URL', async () => {
+        global.fetch.mockResolvedValue({
+            json: jest.fn().mockResolvedValue(fixtures.newsEvening)
+        });
+
+        const data = await api.getEveningNews();
+        expect(global.fetch).toHaveBeenCalledWith(API_URL + "/news1");
+        expect(data).toEqual(fixtures.newsEvening);
+    });
 });
 
 describe('XSS Protection', () => {
