@@ -49,9 +49,6 @@ const UI = {
         let savedTab = localStorage.getItem('activeTab');
         if (!savedTab || !['weather', 'edb', 'air-quality', 'news', 'news-evening'].includes(savedTab)) {
             savedTab = this.getDefaultNewsTab();
-        } else if (savedTab === 'news' || savedTab === 'news-evening') {
-            // Always default to the current time-appropriate news tab on load
-            savedTab = this.getDefaultNewsTab();
         }
         localStorage.setItem('activeTab', savedTab);
         this.switchTab(savedTab);
@@ -59,8 +56,8 @@ const UI = {
 
     getDefaultNewsTab: function() {
         const hour = new Date().getHours();
-        // Morning: 7 AM to 7 PM (7 to 18)
-        // Evening: 7 PM to 7 AM (19 to 6)
+        // Morning: 7:00 AM to 6:59 PM (7 to 18)
+        // Evening: 7:00 PM to 6:59 AM (19 to 6)
         if (hour >= 19 || hour < 7) {
             return 'news-evening';
         }
@@ -254,12 +251,10 @@ const UI = {
 
         document.getElementById('news-morning').onclick = () => {
             localStorage.setItem('activeTab', 'news');
-            localStorage.setItem('lastNewsTab', 'news');
             this.switchTab('news');
         };
         document.getElementById('news-evening').onclick = () => {
             localStorage.setItem('activeTab', 'news-evening');
-            localStorage.setItem('lastNewsTab', 'news-evening');
             this.switchTab('news-evening');
         };
     }
