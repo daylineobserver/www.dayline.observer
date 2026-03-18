@@ -197,7 +197,7 @@ const UI = {
         const body = this.parseMarkdown(data.body);
 
         this.contentArea.innerHTML = `
-            <div class="max-w-2xl mx-left card">
+            <div class="w-full card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">${id.toUpperCase()} Alert ${data.formattedDate}</h2>
                 
                 <div class="space-y-6 text-gray-600 markdown-content">
@@ -212,7 +212,7 @@ const UI = {
         const body1 = this.parseMarkdown(data.body1);
 
         this.contentArea.innerHTML = `
-            <div class="max-w-2xl mx-left card">
+            <div class="w-full card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                     Air Quality Alert ${data.formattedDate}
                 </h2>
@@ -247,7 +247,7 @@ const UI = {
                     </button>
                 </div>
             </div>
-            <div class="max-w-2xl mx-left card">
+            <div class="w-full card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">${title} ${data.formattedDate}</h2>
                 
                 <div class="space-y-6 text-gray-600 markdown-content">
