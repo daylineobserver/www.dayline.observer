@@ -212,19 +212,17 @@ const UI = {
         const body1 = this.parseMarkdown(data.body1);
 
         this.contentArea.innerHTML = `
-            <div class="w-full card">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                    Air Quality Alert ${data.formattedDate}
-                </h2>
-                
-                <div class="space-y-4 text-gray-600">
-                    <div class="markdown-content">
-                        <p class="font-semibold text-gray-800 mb-1">Commentary:</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Station Readings ${data.formattedDate}</h2>
+                    <div class="text-gray-600 leading-relaxed markdown-content">${body1}</div>
+                </div>
+
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Commentary</h2>
+                    
+                    <div class="space-y-6 text-gray-600 markdown-content">
                         ${body}
-                    </div>
-                    <div class="markdown-content">
-                        <p class="font-semibold text-gray-800 mb-1">Station Readings:</p>
-                        ${body1}
                     </div>
                 </div>
             </div>
