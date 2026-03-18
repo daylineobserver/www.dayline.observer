@@ -76,4 +76,20 @@ test.describe('News Tabs Verification', () => {
     // Use regex to be more flexible with capitalization/text changes.
     await expect(page.locator('text=/.*News Update.*/i')).toBeVisible();
   });
+
+  test('active tab should have blue border on the bottom for desktop', async ({ page }) => {
+    // Navigate with a desktop viewport (Playwright default is 1280x720)
+    await page.setViewportSize({ width: 1280, height: 720 });
+    
+    await page.click('#tab-weather');
+    const weatherTab = page.locator('#tab-weather');
+    await expect(weatherTab).toHaveClass(/active/);
+    
+    // Check computed style
+    const borderBottom = await weatherTab.evaluate((el) => window.getComputedStyle(el).borderBottomWidth);
+    const borderLeft = await weatherTab.evaluate((el) => window.getComputedStyle(el).borderLeftWidth);
+    
+    expect(parseInt(borderBottom)).toBeGreaterThan(0);
+    expect(parseInt(borderLeft)).toBe(0);
+  });
 });

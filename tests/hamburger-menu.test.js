@@ -48,4 +48,27 @@ test.describe('Mobile Hamburger Menu', () => {
     await menuBtn.click();
     await expect(svg).not.toHaveClass(/text-blue-600/);
   });
+
+  test('should show blue border on the left for active mobile tab', async ({ page }) => {
+    const menuBtn = page.locator('#mobile-menu-button');
+    const weatherTab = page.locator('#mobile-tab-weather');
+
+    await menuBtn.click();
+    await weatherTab.click();
+    
+    // Re-open menu to check active state
+    await menuBtn.click();
+    
+    await expect(weatherTab).toHaveClass(/active/);
+    
+    // Check computed style for border-left
+    const borderLeft = await weatherTab.evaluate((el) => window.getComputedStyle(el).borderLeftWidth);
+    const borderBottom = await weatherTab.evaluate((el) => window.getComputedStyle(el).borderBottomWidth);
+    const borderColor = await weatherTab.evaluate((el) => window.getComputedStyle(el).borderLeftColor);
+    
+    expect(parseInt(borderLeft)).toBeGreaterThan(0);
+    expect(parseInt(borderBottom)).toBe(0);
+    // #508ff3 is rgb(80, 143, 243)
+    expect(borderColor).toBe('rgb(80, 143, 243)');
+  });
 });
