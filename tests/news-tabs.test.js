@@ -100,7 +100,8 @@ test.describe('News Tabs Verification', () => {
     
     // Active tab should have a thicker blue bottom border and no left border
     expect(styles.borderBottomWidth).toBe('4px');
-    expect(styles.borderBottomColor).toBe('rgb(59, 130, 246)');
+    // #508ff3 is rgb(80, 143, 243)
+    expect(styles.borderBottomColor).toBe('rgb(80, 143, 243)');
     expect(styles.borderLeftWidth).toBe('0px');
   });
 });

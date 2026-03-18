@@ -49,19 +49,19 @@
                     </a>
                 </div>
                 <nav class="hidden md:flex ml-10 space-x-8" id="desktop-menu">
-                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                             id="tab-news">
                         News
                     </button>
-                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                             id="tab-weather">
                         Weather
                     </button>
-                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                             id="tab-edb">
                         School
                     </button>
-                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                             id="tab-air-quality">
                         Air Quality
                     </button>
@@ -70,7 +70,14 @@
 
             <!-- Mobile menu button -->
             <div class="md:hidden flex items-center">
-                <button class="mobile-menu-button" id="mobile-menu-button">
+                <button
+                        type="button"
+                        class="outline-none mobile-menu-button"
+                        id="mobile-menu-button"
+                        aria-label="Toggle navigation menu"
+                        aria-expanded="false"
+                        aria-controls="mobile-menu"
+                        onclick="(function(button){ var menu = document.getElementById('mobile-menu'); if (!menu) return; var isExpanded = button.getAttribute('aria-expanded') === 'true'; button.setAttribute('aria-expanded', (!isExpanded).toString()); menu.classList.toggle('hidden', isExpanded); })(this);">
                     <svg class="w-6 h-6 text-gray-500"
                          fill="none"
                          stroke="currentColor"
@@ -87,19 +94,19 @@
     <!-- Mobile menu -->
     <div class="hidden mobile-menu md:hidden border-t border-gray-100 bg-white">
         <nav class="flex flex-col">
-            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
                     id="mobile-tab-news">
                 News
             </button>
-            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
                     id="mobile-tab-weather">
                 Weather
             </button>
-            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
                     id="mobile-tab-edb">
                 School
             </button>
-            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
                     id="mobile-tab-air-quality">
                 Air Quality
             </button>
