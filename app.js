@@ -33,7 +33,7 @@ const UI = {
 
         this.tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                const tabId = tab.id.replace('tab-', '');
+                const tabId = tab.id.replace('tab-', '').replace('mobile-', '');
                 if (tabId === 'news') {
                     const newsTabId = this.getDefaultNewsTab();
                     localStorage.setItem('activeTab', newsTabId);
@@ -42,8 +42,24 @@ const UI = {
                     localStorage.setItem('activeTab', tabId);
                     this.switchTab(tabId);
                 }
+                
+                // Close mobile menu if open
+                const mobileMenu = document.querySelector('.mobile-menu');
+                if (mobileMenu) {
+                    mobileMenu.classList.add('hidden');
+                }
             });
         });
+
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (menuBtn && mobileMenu) {
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
 
         // Default tab
         let savedTab = localStorage.getItem('activeTab');
@@ -67,7 +83,8 @@ const UI = {
     switchTab: async function(tabId) {
         // Update tab UI
         this.tabs.forEach(tab => {
-            if (tab.id === `tab-${tabId}` || (tabId === 'news-evening' && tab.id === 'tab-news')) {
+            const currentTabId = tab.id.replace('tab-', '').replace('mobile-', '');
+            if (currentTabId === tabId || (tabId === 'news-evening' && currentTabId === 'news')) {
                 tab.classList.add('active');
             } else {
                 tab.classList.remove('active');
