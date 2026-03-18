@@ -43,7 +43,7 @@ test.describe('Dayline Observer Visual Snapshots', () => {
   test('should match the air quality page snapshot', async ({ page }) => {
     await page.click('#tab-air-quality');
     // Wait for the Air Quality content
-    await page.waitForSelector('text=Air Quality Alert');
+    await page.waitForSelector('text=Station Readings');
     await expect(page).toHaveScreenshot('air-quality-page.png');
   });
 

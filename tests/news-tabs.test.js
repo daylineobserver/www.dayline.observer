@@ -29,7 +29,9 @@ test.describe('News Tabs Verification', () => {
     // Verify Morning tab is active and content is correct
     const morningBtn = page.locator('#news-morning');
     await expect(morningBtn).toBeVisible();
-    await expect(morningBtn).toHaveClass(/border-blue-500/);
+    await expect(morningBtn).toHaveClass(/\bbg-white\b/);
+    await expect(morningBtn).toHaveClass(/\btext-blue-600\b/);
+    await expect(morningBtn).toHaveClass(/\bshadow-sm\b/);
     
     await expect(page.locator('text=Latest News Update')).toBeVisible();
     
@@ -38,12 +40,16 @@ test.describe('News Tabs Verification', () => {
     
     // Verify Evening tab is active and content is correct
     const eveningBtn = page.locator('#news-evening');
-    await expect(eveningBtn).toHaveClass(/border-blue-500/);
+    await expect(eveningBtn).toHaveClass(/\bbg-white\b/);
+    await expect(eveningBtn).toHaveClass(/\btext-blue-600\b/);
+    await expect(eveningBtn).toHaveClass(/\bshadow-sm\b/);
     await expect(page.locator('text=Evening News Update')).toBeVisible();
     
     // Switch back to Morning
     await page.click('#news-morning');
-    await expect(morningBtn).toHaveClass(/border-blue-500/);
+    await expect(morningBtn).toHaveClass(/\bbg-white\b/);
+    await expect(morningBtn).toHaveClass(/\btext-blue-600\b/);
+    await expect(morningBtn).toHaveClass(/\bshadow-sm\b/);
     await expect(page.locator('text=Latest News Update')).toBeVisible();
   });
 
