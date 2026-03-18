@@ -11,6 +11,9 @@ test.describe('News Tabs Verification', () => {
     await page.route('**/news1', async route => {
       await route.fulfill({ json: fixtures.newsEvening });
     });
+    await page.route('**/weather', async route => {
+      await route.fulfill({ json: fixtures.weather || [] });
+    });
 
     // Navigate to the local index.html
     const url = 'file://' + path.resolve(__dirname, '../index.html');
@@ -75,5 +78,30 @@ test.describe('News Tabs Verification', () => {
     // To make the test robust, we just check that A news update is visible.
     // Use regex to be more flexible with capitalization/text changes.
     await expect(page.locator('text=/.*News Update.*/i')).toBeVisible();
+  });
+
+  test('active tab should have blue border on the bottom for desktop', async ({ page }) => {
+    // Navigate with a desktop viewport (Playwright default is 1280x720)
+    await page.setViewportSize({ width: 1280, height: 720 });
+    
+    await page.click('#tab-weather');
+    const weatherTab = page.locator('#tab-weather');
+    await expect(weatherTab).toHaveClass(/active/);
+    
+    // Check computed style for active tab borders
+    const styles = await weatherTab.evaluate((el) => {
+      const computed = window.getComputedStyle(el);
+      return {
+        borderBottomWidth: computed.borderBottomWidth,
+        borderBottomColor: computed.borderBottomColor,
+        borderLeftWidth: computed.borderLeftWidth,
+      };
+    });
+    
+    // Active tab should have a thicker blue bottom border and no left border
+    expect(styles.borderBottomWidth).toBe('4px');
+    // #508ff3 is rgb(80, 143, 243)
+    expect(styles.borderBottomColor).toBe('rgb(80, 143, 243)');
+    expect(styles.borderLeftWidth).toBe('0px');
   });
 });

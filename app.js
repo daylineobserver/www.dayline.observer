@@ -33,7 +33,7 @@ const UI = {
 
         this.tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                const tabId = tab.id.replace('tab-', '');
+                const tabId = tab.id.replace('tab-', '').replace('mobile-', '');
                 if (tabId === 'news') {
                     const newsTabId = this.getDefaultNewsTab();
                     localStorage.setItem('activeTab', newsTabId);
@@ -42,8 +42,34 @@ const UI = {
                     localStorage.setItem('activeTab', tabId);
                     this.switchTab(tabId);
                 }
+                
+                // Close mobile menu if open
+                const mobileMenu = document.querySelector('.mobile-menu');
+                if (mobileMenu) {
+                    mobileMenu.classList.add('hidden');
+                    const menuToggleButton = document.getElementById('mobile-menu-button');
+                    if (menuToggleButton) {
+                        menuToggleButton.setAttribute('aria-expanded', 'false');
+                    }
+                }
             });
         });
+
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (menuBtn && mobileMenu) {
+            // Initialize aria-expanded based on initial menu visibility
+            const isMenuHidden = mobileMenu.classList.contains('hidden');
+            menuBtn.setAttribute('aria-expanded', (!isMenuHidden).toString());
+
+            menuBtn.addEventListener('click', () => {
+                const isHiddenAfterToggle = mobileMenu.classList.toggle('hidden');
+                // aria-expanded is "true" when the menu is visible (not hidden)
+                menuBtn.setAttribute('aria-expanded', (!isHiddenAfterToggle).toString());
+            });
+        }
 
         // Default tab
         let savedTab = localStorage.getItem('activeTab');
@@ -67,7 +93,8 @@ const UI = {
     switchTab: async function(tabId) {
         // Update tab UI
         this.tabs.forEach(tab => {
-            if (tab.id === `tab-${tabId}` || (tabId === 'news-evening' && tab.id === 'tab-news')) {
+            const currentTabId = tab.id.replace('tab-', '').replace('mobile-', '');
+            if (currentTabId === tabId || (tabId === 'news-evening' && currentTabId === 'news')) {
                 tab.classList.add('active');
             } else {
                 tab.classList.remove('active');

@@ -1,7 +1,13 @@
-.tab-btn.active {
+#desktop-menu .tab-btn.active {
     border-color: #508ff3; /* blue-600 */
     color: #1e293b; /* gray-900 */
     border-bottom-width: 4px;
+}
+
+.mobile-menu .tab-btn.active {
+    border-left: 4px solid #508ff3; /* blue-600 */
+    color: #1e293b; /* gray-900 */
+    background-color: #f9fafb; /* gray-50 */
 }
 
 .card {

@@ -34,38 +34,83 @@
 <!-- Top info bar -->
 <div class="bg-white border-b border-gray-100 py-2 px-4 text-xs text-gray-500 flex justify-between items-center">
     <div>
-        Get updates that fit your morning
+        Get updates that fit your day.
     </div>
 </div>
 
 <!-- Header / Navigation -->
 <header class="bg-white shadow-sm sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-center h-16">
-            <div class="h-auto max-w-[100px]">
-                <a href="">
-                    <img alt="Dayline Observer logo" class="w-auto h-[4em]" src="resources/logo.svg">
-                </a>
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <div class="h-auto max-w-[100px]">
+                    <a href="">
+                        <img alt="Dayline Observer logo" class="w-auto h-[4em]" src="resources/logo.svg">
+                    </a>
+                </div>
+                <nav class="hidden md:flex ml-10 space-x-8" id="desktop-menu">
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                            id="tab-news">
+                        News
+                    </button>
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                            id="tab-weather">
+                        Weather
+                    </button>
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                            id="tab-edb">
+                        School
+                    </button>
+                    <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-none border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                            id="tab-air-quality">
+                        Air Quality
+                    </button>
+                </nav>
             </div>
-            <nav class="ml-10 flex space-x-8">
-                <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                        id="tab-news">
-                    News
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center">
+                <button
+                        type="button"
+                        class="outline-none mobile-menu-button"
+                        id="mobile-menu-button"
+                        aria-label="Toggle navigation menu"
+                        aria-expanded="false"
+                        aria-controls="mobile-menu"
+                        onclick="(function(button){ var menu = document.getElementById('mobile-menu'); if (!menu) return; var isExpanded = button.getAttribute('aria-expanded') === 'true'; button.setAttribute('aria-expanded', (!isExpanded).toString()); menu.classList.toggle('hidden', isExpanded); })(this);">
+                    <svg class="w-6 h-6 text-gray-500"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
                 </button>
-                <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                        id="tab-weather">
-                    Weather
-                </button>
-                <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                        id="tab-edb">
-                    School
-                </button>
-                <button class="tab-btn px-3 py-5 text-sm font-medium border-b-2 transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                        id="tab-air-quality">
-                    Air Quality
-                </button>
-            </nav>
+            </div>
         </div>
+    </div>
+    <!-- Mobile menu -->
+    <div class="hidden mobile-menu md:hidden border-t border-gray-100 bg-white">
+        <nav class="flex flex-col">
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
+                    id="mobile-tab-news">
+                News
+            </button>
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
+                    id="mobile-tab-weather">
+                Weather
+            </button>
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
+                    id="mobile-tab-edb">
+                School
+            </button>
+            <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
+                    id="mobile-tab-air-quality">
+                Air Quality
+            </button>
+        </nav>
     </div>
 </header>
 
