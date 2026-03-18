@@ -7,6 +7,13 @@ test.describe('Mobile Hamburger Menu', () => {
 
   test.beforeEach(async ({ page }) => {
     const url = 'file://' + path.resolve(__dirname, '../index.html');
+
+    // Prevent UI.init() from making real network calls during tests
+    const blockedPatterns = ['**/news', '**/news1', '**/weather', '**/edb', '**/aqi'];
+    for (const pattern of blockedPatterns) {
+      await page.route(pattern, (route) => route.abort());
+    }
+
     await page.goto(url, { waitUntil: 'domcontentloaded' });
   });
 
@@ -36,17 +43,31 @@ test.describe('Mobile Hamburger Menu', () => {
     const menuBtn = page.locator('#mobile-menu-button');
     const svg = menuBtn.locator('svg');
     
-    // Initial color should be gray-500
-    await expect(svg).toHaveClass(/text-gray-500/);
+    // Initial color should be gray-500 (Tailwind gray-500: rgb(107, 114, 128))
+    const initialColor = await svg.evaluate((el) => {
+      const styles = window.getComputedStyle(el);
+      return styles.color || styles.stroke;
+    });
+    expect(initialColor).toBe('rgb(107, 114, 128)');
     
     // Hover over the button
     await menuBtn.hover();
-    // It should NOT have blue-600
-    await expect(svg).not.toHaveClass(/text-blue-600/);
+    const hoverColor = await svg.evaluate((el) => {
+      const styles = window.getComputedStyle(el);
+      return styles.color || styles.stroke;
+    });
+    // It should not change to blue-600 (Tailwind blue-600: rgb(37, 99, 235))
+    expect(hoverColor).toBe(initialColor);
+    expect(hoverColor).not.toBe('rgb(37, 99, 235)');
     
     // Click the button
     await menuBtn.click();
-    await expect(svg).not.toHaveClass(/text-blue-600/);
+    const clickColor = await svg.evaluate((el) => {
+      const styles = window.getComputedStyle(el);
+      return styles.color || styles.stroke;
+    });
+    expect(clickColor).toBe(initialColor);
+    expect(clickColor).not.toBe('rgb(37, 99, 235)');
   });
 
   test('should show blue border on the left for active mobile tab', async ({ page }) => {

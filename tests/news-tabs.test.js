@@ -11,6 +11,9 @@ test.describe('News Tabs Verification', () => {
     await page.route('**/news1', async route => {
       await route.fulfill({ json: fixtures.newsEvening });
     });
+    await page.route('**/weather', async route => {
+      await route.fulfill({ json: fixtures.weather || [] });
+    });
 
     // Navigate to the local index.html
     const url = 'file://' + path.resolve(__dirname, '../index.html');
@@ -85,11 +88,19 @@ test.describe('News Tabs Verification', () => {
     const weatherTab = page.locator('#tab-weather');
     await expect(weatherTab).toHaveClass(/active/);
     
-    // Check computed style
-    const borderBottom = await weatherTab.evaluate((el) => window.getComputedStyle(el).borderBottomWidth);
-    const borderLeft = await weatherTab.evaluate((el) => window.getComputedStyle(el).borderLeftWidth);
+    // Check computed style for active tab borders
+    const styles = await weatherTab.evaluate((el) => {
+      const computed = window.getComputedStyle(el);
+      return {
+        borderBottomWidth: computed.borderBottomWidth,
+        borderBottomColor: computed.borderBottomColor,
+        borderLeftWidth: computed.borderLeftWidth,
+      };
+    });
     
-    expect(parseInt(borderBottom)).toBeGreaterThan(0);
-    expect(parseInt(borderLeft)).toBe(0);
+    // Active tab should have a thicker blue bottom border and no left border
+    expect(styles.borderBottomWidth).toBe('4px');
+    expect(styles.borderBottomColor).toBe('rgb(59, 130, 246)');
+    expect(styles.borderLeftWidth).toBe('0px');
   });
 });

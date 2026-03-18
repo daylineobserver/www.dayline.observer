@@ -47,6 +47,10 @@ const UI = {
                 const mobileMenu = document.querySelector('.mobile-menu');
                 if (mobileMenu) {
                     mobileMenu.classList.add('hidden');
+                    const menuToggleButton = document.getElementById('mobile-menu-button');
+                    if (menuToggleButton) {
+                        menuToggleButton.setAttribute('aria-expanded', 'false');
+                    }
                 }
             });
         });
@@ -56,8 +60,14 @@ const UI = {
         const mobileMenu = document.querySelector('.mobile-menu');
 
         if (menuBtn && mobileMenu) {
+            // Initialize aria-expanded based on initial menu visibility
+            const isMenuHidden = mobileMenu.classList.contains('hidden');
+            menuBtn.setAttribute('aria-expanded', (!isMenuHidden).toString());
+
             menuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+                const isHiddenAfterToggle = mobileMenu.classList.toggle('hidden');
+                // aria-expanded is "true" when the menu is visible (not hidden)
+                menuBtn.setAttribute('aria-expanded', (!isHiddenAfterToggle).toString());
             });
         }
 
