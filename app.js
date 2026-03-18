@@ -237,15 +237,15 @@ const UI = {
         const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
 
         this.contentArea.innerHTML = `
-            <div class="mb-6 border-b border-gray-200">
-                <nav class="-mb-px flex space-x-8">
-                    <button class="news-tab-btn py-4 px-1 border-b-2 font-medium text-sm ${type === 'morning' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" id="news-morning">
+            <div class="mb-8 flex justify-center">
+                <div class="inline-flex p-1 bg-gray-100 rounded-xl">
+                    <button class="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${type === 'morning' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}" id="news-morning">
                         Morning
                     </button>
-                    <button class="news-tab-btn py-4 px-1 border-b-2 font-medium text-sm ${type === 'evening' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" id="news-evening">
+                    <button class="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${type === 'evening' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}" id="news-evening">
                         Evening
                     </button>
-                </nav>
+                </div>
             </div>
             <div class="max-w-2xl mx-left card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">${title} ${data.formattedDate}</h2>
