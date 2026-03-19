@@ -18,7 +18,7 @@
     "test": "npm run test:jest && npm run test:pw",
     "test:jest": "jest",
     "test:pw": "playwright test",
-    "build": "mkdirp dist && ncp resources dist/resources && terser app.js -o dist/app.js --compress --mangle && cleancss style.css -o dist/style.css && html-minifier-terser index.html --collapse-whitespace --remove-comments --remove-redundant-attributes --remove-script-type-attributes --use-short-doctype --minify-js true --minify-css true -o dist/index.html"
+    "build": "rimraf dist && mkdirp dist && ncp resources dist/resources && terser app.js -o dist/app.js --compress --mangle && cleancss style.css -o dist/style.css && html-minifier-terser index.html --collapse-whitespace --remove-comments --remove-redundant-attributes --remove-script-type-attributes --use-short-doctype --minify-js true --minify-css true -o dist/index.html"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
@@ -31,6 +31,7 @@
     "mkdirp": "^3.0.1",
     "ncp": "^2.0.0",
     "playwright": "^1.57.0",
+    "rimraf": "^6.1.3",
     "terser": "^5.46.1"
   }
 }
