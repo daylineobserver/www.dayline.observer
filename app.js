@@ -31,6 +31,14 @@ const UI = {
         if (!this.contentArea) this.contentArea = document.getElementById('content-area');
         if (this.tabs.length === 0) this.tabs = document.querySelectorAll('.tab-btn');
 
+        if (typeof gtag === 'function') {
+            gtag('event', 'page_view', {
+                page_title: document.title,
+                page_location: window.location.href,
+                page_path: window.location.pathname
+            });
+        }
+
         this.tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const tabId = tab.id.replace('tab-', '').replace('mobile-', '');
@@ -91,6 +99,12 @@ const UI = {
     },
 
     switchTab: async function(tabId) {
+        if (typeof gtag === 'function') {
+            gtag('event', 'tab_click', {
+                tab_id: tabId
+            });
+        }
+
         // Update tab UI
         this.tabs.forEach(tab => {
             const currentTabId = tab.id.replace('tab-', '').replace('mobile-', '');
