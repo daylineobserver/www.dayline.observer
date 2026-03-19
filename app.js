@@ -307,7 +307,7 @@ const UI = {
                         tabindex="${type === 'morning' ? '0' : '-1'}"
                         aria-controls="news-panel"
                     >
-                        <img src="resources/sun.svg" alt="Morning" class="w-4 h-4 mr-1.5">
+                        <img src="resources/sun.svg" alt="" aria-hidden="true" class="w-4 h-4 mr-1.5">
                         Morning
                     </button>
                     <button
@@ -318,7 +318,7 @@ const UI = {
                         tabindex="${type === 'evening' ? '0' : '-1'}"
                         aria-controls="news-panel"
                     >
-                        <img src="resources/moon.svg" alt="Evening" class="w-4 h-4 mr-1.5">
+                        <img src="resources/moon.svg" alt="" aria-hidden="true" class="w-4 h-4 mr-1.5">
                         Evening
                     </button>
                 </div>
