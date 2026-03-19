@@ -34,7 +34,7 @@ const UI = {
         if (typeof gtag === 'function') {
             gtag('event', 'page_view', {
                 page_title: document.title,
-                page_location: window.location.origin + window.location.pathname,
+                page_location: window.location.href,
                 page_path: window.location.pathname
             });
         }
@@ -45,10 +45,10 @@ const UI = {
                 if (tabId === 'news') {
                     const newsTabId = this.getDefaultNewsTab();
                     localStorage.setItem('activeTab', newsTabId);
-                    this.switchTab(newsTabId);
+                    this.switchTab(newsTabId, true);
                 } else {
                     localStorage.setItem('activeTab', tabId);
-                    this.switchTab(tabId);
+                    this.switchTab(tabId, true);
                 }
                 
                 // Close mobile menu if open
@@ -98,8 +98,8 @@ const UI = {
         return 'news';
     },
 
-    switchTab: async function(tabId) {
-        if (typeof gtag === 'function') {
+    switchTab: async function(tabId, isUserInitiated = false) {
+        if (isUserInitiated && typeof gtag === 'function') {
             gtag('event', 'tab_click', {
                 tab_id: tabId
             });
@@ -320,11 +320,11 @@ const UI = {
 
         morningTab.onclick = () => {
             localStorage.setItem('activeTab', 'news');
-            this.switchTab('news');
+            this.switchTab('news', true);
         };
         eveningTab.onclick = () => {
             localStorage.setItem('activeTab', 'news-evening');
-            this.switchTab('news-evening');
+            this.switchTab('news-evening', true);
         };
 
         const handleTabKeydown = (event) => {
