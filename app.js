@@ -275,13 +275,25 @@ const UI = {
         const body = this.parseMarkdown(data.body);
         const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
 
-        // Calculate reading time
+        // Calculate reading time based on rendered text, not raw markdown
         let readingTime = '';
         if (data.body) {
             const wordsPerMinute = 225;
-            const words = data.body.trim().split(/\s+/).length;
-            const minutes = Math.ceil(words / wordsPerMinute);
-            readingTime = `<span class="block md:inline-block text-gray-600 text-base font-normal md:ml-1"><span class="hidden md:inline">· </span>${minutes} min read</span>`;
+            // Derive plain text from rendered markdown HTML
+            const tempContainer = typeof document !== 'undefined' ? document.createElement('div') : null;
+            let plainText = '';
+            if (tempContainer) {
+                tempContainer.innerHTML = body || '';
+                plainText = (tempContainer.textContent || tempContainer.innerText || '').trim();
+            } else {
+                // Fallback: use raw body text if document is not available
+                plainText = String(data.body).trim().replace(/[#_*`>\-\+\[\]\(\)!]/g, '');
+            }
+            if (plainText) {
+                const words = plainText.split(/\s+/).length;
+                const minutes = Math.ceil(words / wordsPerMinute);
+                readingTime = `<span class="block md:inline-block text-gray-600 text-base font-normal md:ml-1"><span class="hidden md:inline">· </span>${minutes} min read</span>`;
+            }
         }
 
         this.contentArea.innerHTML = `

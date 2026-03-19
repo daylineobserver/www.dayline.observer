@@ -350,7 +350,7 @@ describe('UI.renderNews Reading Time', () => {
         UI.renderNews(newsData);
 
         const h2 = contentArea.querySelector('h2');
-        const readingTimeSpan = h2.querySelector('span');
+        const readingTimeSpan = contentArea.querySelector('h2 span.text-gray-600.text-base.font-normal');
 
         expect(readingTimeSpan).toBeTruthy();
         expect(readingTimeSpan.classList.contains('text-gray-600')).toBe(true);
@@ -362,7 +362,7 @@ describe('UI.renderNews Reading Time', () => {
         expect(readingTimeSpan.classList.contains('md:inline-block')).toBe(true);
 
         // Dot separator visibility
-        const dotSpan = readingTimeSpan.querySelector('span');
+        const dotSpan = readingTimeSpan.querySelector('span.hidden.md\\:inline');
         expect(dotSpan).toBeTruthy();
         expect(dotSpan.classList.contains('hidden')).toBe(true);
         expect(dotSpan.classList.contains('md:inline')).toBe(true);
