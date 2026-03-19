@@ -275,6 +275,15 @@ const UI = {
         const body = this.parseMarkdown(data.body);
         const body1 = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(data.body1) : data.body1;
 
+        // Calculate reading time
+        let readingTime = '';
+        if (data.body) {
+            const wordsPerMinute = 225;
+            const words = data.body.trim().split(/\s+/).length;
+            const minutes = Math.ceil(words / wordsPerMinute);
+            readingTime = `<span class="block md:inline-block text-gray-600 text-base font-normal md:ml-1"><span class="hidden md:inline">· </span>${minutes} min read</span>`;
+        }
+
         this.contentArea.innerHTML = `
             <div class="mb-8 flex justify-center">
                 <div class="inline-flex p-1 bg-gray-100 rounded-xl" role="tablist" aria-label="News time of day">
@@ -306,7 +315,7 @@ const UI = {
                 id="news-panel"
                 aria-labelledby="${type === 'morning' ? 'news-morning' : 'news-evening'}"
             >
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">${title} ${data.formattedDate}</h2>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">${title} ${data.formattedDate}${readingTime}</h2>
                 
                 <div class="space-y-6 text-gray-600 markdown-content">
                     ${body}
