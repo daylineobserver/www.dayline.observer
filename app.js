@@ -34,7 +34,7 @@ const UI = {
         if (typeof gtag === 'function') {
             gtag('event', 'page_view', {
                 page_title: document.title,
-                page_location: window.location.href,
+                page_location: window.location.origin + window.location.pathname,
                 page_path: window.location.pathname
             });
         }
