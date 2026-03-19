@@ -304,6 +304,84 @@ describe('XSS Protection', () => {
     });
 });
 
+describe('UI.renderNews Reading Time', () => {
+    let contentArea;
+
+    beforeEach(() => {
+        document.body.innerHTML = '<div id="content-area"></div>';
+        contentArea = document.getElementById('content-area');
+        UI.contentArea = contentArea;
+    });
+
+    test('should calculate and display correct reading time for long articles', () => {
+        const newsData = {
+            title: 'Long News',
+            // 450 words = 2 mins at 225 wpm
+            body: 'word '.repeat(450),
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderNews(newsData);
+
+        const h2 = contentArea.querySelector('h2');
+        expect(h2.textContent).toContain('2 min read');
+    });
+
+    test('should display 1 min read for short articles', () => {
+        const newsData = {
+            title: 'Short News',
+            body: 'Short content',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderNews(newsData);
+
+        const h2 = contentArea.querySelector('h2');
+        expect(h2.textContent).toContain('1 min read');
+    });
+
+    test('should apply correct styling and responsive classes', () => {
+        const newsData = {
+            title: 'Styled News',
+            body: 'Some content',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderNews(newsData);
+
+        const h2 = contentArea.querySelector('h2');
+        const readingTimeSpan = contentArea.querySelector('h2 span.text-gray-600.text-base.font-normal');
+
+        expect(readingTimeSpan).toBeTruthy();
+        expect(readingTimeSpan.classList.contains('text-gray-600')).toBe(true);
+        expect(readingTimeSpan.classList.contains('text-base')).toBe(true);
+        expect(readingTimeSpan.classList.contains('font-normal')).toBe(true);
+        
+        // Responsive classes
+        expect(readingTimeSpan.classList.contains('block')).toBe(true);
+        expect(readingTimeSpan.classList.contains('md:inline-block')).toBe(true);
+
+        // Dot separator visibility
+        const dotSpan = readingTimeSpan.querySelector('span.hidden.md\\:inline');
+        expect(dotSpan).toBeTruthy();
+        expect(dotSpan.classList.contains('hidden')).toBe(true);
+        expect(dotSpan.classList.contains('md:inline')).toBe(true);
+        expect(dotSpan.textContent).toContain('·');
+    });
+
+    test('should not display reading time if body is missing', () => {
+        const newsData = {
+            title: 'No Body News',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderNews(newsData);
+
+        const h2 = contentArea.querySelector('h2');
+        expect(h2.textContent).not.toContain('min read');
+    });
+});
+
 describe('Analytics Tracking', () => {
     let originalGtag;
 
