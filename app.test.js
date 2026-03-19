@@ -304,6 +304,118 @@ describe('XSS Protection', () => {
     });
 });
 
+describe('Analytics Tracking', () => {
+    let originalGtag;
+
+    beforeEach(() => {
+        // Clear require cache for app.js to ensure UI object is fresh
+        delete require.cache[require.resolve('./app')];
+        const { UI: freshUI } = require('./app');
+        // We need to use the freshUI instead of the one imported at the top
+        // But app.test.js uses UI globally.
+        Object.assign(UI, freshUI);
+
+        originalGtag = global.gtag;
+        global.gtag = jest.fn();
+        
+        // Setup minimal DOM for UI.init
+        document.body.innerHTML = `
+            <div id="content-area"></div>
+            <button id="tab-news" class="tab-btn">News</button>
+            <button id="tab-weather" class="tab-btn">Weather</button>
+            <div class="mobile-menu hidden"></div>
+            <button id="mobile-menu-button" aria-expanded="false"></button>
+        `;
+        
+        // Mock localStorage
+        if (!global.localStorage) {
+            const localStorageMock = (function() {
+                let store = {};
+                return {
+                    getItem: jest.fn(key => store[key] || null),
+                    setItem: jest.fn((key, value) => { store[key] = value.toString(); }),
+                    clear: jest.fn(() => { store = {}; }),
+                    removeItem: jest.fn(key => { delete store[key]; })
+                };
+            })();
+            Object.defineProperty(global, 'localStorage', { value: localStorageMock, configurable: true });
+        } else {
+            global.localStorage.getItem.mockClear();
+            global.localStorage.setItem.mockClear();
+        }
+        
+        // Reset UI properties
+        UI.contentArea = null;
+        UI.tabs = [];
+
+        // Mock api calls to prevent real network requests or errors during UI.init -> switchTab
+        global.fetch = jest.fn().mockResolvedValue({
+            json: jest.fn().mockResolvedValue({})
+        });
+    });
+
+    afterEach(() => {
+        global.gtag = originalGtag;
+        jest.restoreAllMocks();
+    });
+
+    test('UI.init should trigger page_view event exactly once', () => {
+        // Mock global.window for page_location and page_path
+        global.window = {
+            location: {
+                href: 'http://localhost/',
+                pathname: '/'
+            }
+        };
+        
+        // Ensure gtag is available when UI.init is called
+        global.gtag = jest.fn();
+
+        UI.init();
+        
+        expect(global.gtag).toHaveBeenCalledWith('event', 'page_view', expect.objectContaining({
+            page_title: document.title,
+            page_location: 'http://localhost/',
+            page_path: '/'
+        }));
+        
+        const pageViewCalls = global.gtag.mock.calls.filter(call => call[1] === 'page_view');
+        expect(pageViewCalls.length).toBe(1);
+    });
+
+    test('UI.init should NOT trigger tab_click event (programmatic initial load)', () => {
+        UI.init();
+        
+        const tabClickCalls = global.gtag.mock.calls.filter(call => call[1] === 'tab_click');
+        expect(tabClickCalls.length).toBe(0);
+    });
+
+    test('UI.switchTab should trigger tab_click when isUserInitiated is true', async () => {
+        UI.contentArea = document.getElementById('content-area');
+        await UI.switchTab('weather', true);
+        
+        expect(global.gtag).toHaveBeenCalledWith('event', 'tab_click', {
+            tab_id: 'weather'
+        });
+    });
+
+    test('UI.switchTab should NOT trigger tab_click when isUserInitiated is false', async () => {
+        UI.contentArea = document.getElementById('content-area');
+        await UI.switchTab('weather', false);
+        
+        const tabClickCalls = global.gtag.mock.calls.filter(call => call[1] === 'tab_click');
+        expect(tabClickCalls.length).toBe(0);
+    });
+
+    test('UI.switchTab should NOT throw error if gtag is missing', async () => {
+        delete global.gtag;
+        UI.contentArea = document.getElementById('content-area');
+        
+        // Should not throw
+        await expect(UI.switchTab('weather', true)).resolves.not.toThrow();
+    });
+});
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = fixtures;
 }
