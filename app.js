@@ -63,6 +63,17 @@ const UI = {
             });
         });
 
+        // Logo click navigation
+        const logoLinks = document.querySelectorAll('.logo-link');
+        logoLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const newsTabId = this.getDefaultNewsTab();
+                localStorage.setItem('activeTab', newsTabId);
+                this.switchTab(newsTabId, true);
+            });
+        });
+
         // Mobile menu toggle
         const menuBtn = document.getElementById('mobile-menu-button');
         const mobileMenu = document.querySelector('.mobile-menu');
