@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: ['playwright.test.js', 'persistence.test.js', 'news-tabs.test.js', 'hamburger-menu.test.js', 'logo_nav.test.js'],
+  testMatch: ['playwright.test.js', 'persistence.test.js', 'news-tabs.test.js', 'hamburger-menu.test.js', 'logo_nav.test.js', 'mobile_menu_logo.test.js'],
   /* Maximum time one test can run for. */
   timeout: 30000,
   expect: {

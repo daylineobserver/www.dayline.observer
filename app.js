@@ -51,15 +51,7 @@ const UI = {
                     this.switchTab(tabId, true);
                 }
                 
-                // Close mobile menu if open
-                const mobileMenu = document.querySelector('.mobile-menu');
-                if (mobileMenu) {
-                    mobileMenu.classList.add('hidden');
-                    const menuToggleButton = document.getElementById('mobile-menu-button');
-                    if (menuToggleButton) {
-                        menuToggleButton.setAttribute('aria-expanded', 'false');
-                    }
-                }
+                this.closeMobileMenu();
             });
         });
 
@@ -71,6 +63,7 @@ const UI = {
                 const newsTabId = this.getDefaultNewsTab();
                 localStorage.setItem('activeTab', newsTabId);
                 this.switchTab(newsTabId, true);
+                this.closeMobileMenu();
             });
         });
 
@@ -107,6 +100,17 @@ const UI = {
             return 'news-evening';
         }
         return 'news';
+    },
+
+    closeMobileMenu: function() {
+        const mobileMenu = document.querySelector('.mobile-menu');
+        if (mobileMenu) {
+            mobileMenu.classList.add('hidden');
+            const menuToggleButton = document.getElementById('mobile-menu-button');
+            if (menuToggleButton) {
+                menuToggleButton.setAttribute('aria-expanded', 'false');
+            }
+        }
     },
 
     switchTab: async function(tabId, isUserInitiated = false) {
