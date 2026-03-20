@@ -51,21 +51,25 @@ const UI = {
                     this.switchTab(tabId, true);
                 }
                 
-                // Close mobile menu if open
-                const mobileMenu = document.querySelector('.mobile-menu');
-                if (mobileMenu) {
-                    mobileMenu.classList.add('hidden');
-                    const menuToggleButton = document.getElementById('mobile-menu-button');
-                    if (menuToggleButton) {
-                        menuToggleButton.setAttribute('aria-expanded', 'false');
-                    }
-                }
+                this.closeMobileMenu();
+            });
+        });
+
+        // Logo click navigation
+        const logoLinks = document.querySelectorAll('.logo-link');
+        logoLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const newsTabId = this.getDefaultNewsTab();
+                localStorage.setItem('activeTab', newsTabId);
+                this.switchTab(newsTabId, true);
+                this.closeMobileMenu();
             });
         });
 
         // Mobile menu toggle
         const menuBtn = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
 
         if (menuBtn && mobileMenu) {
             // Initialize aria-expanded based on initial menu visibility
@@ -96,6 +100,17 @@ const UI = {
             return 'news-evening';
         }
         return 'news';
+    },
+
+    closeMobileMenu: function() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu) {
+            mobileMenu.classList.add('hidden');
+            const menuToggleButton = document.getElementById('mobile-menu-button');
+            if (menuToggleButton) {
+                menuToggleButton.setAttribute('aria-expanded', 'false');
+            }
+        }
     },
 
     switchTab: async function(tabId, isUserInitiated = false) {

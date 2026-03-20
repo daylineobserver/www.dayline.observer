@@ -4,6 +4,24 @@ import fixtures from '../fixtures.js';
 
 test.describe('Dayline Observer Visual Snapshots', () => {
   test.beforeEach(async ({ page }) => {
+    // Force timezone to Hong Kong and fix the system clock for deterministic snapshots.
+    // We choose a morning time (10:00 AM) to ensure 'news' (morning) is the default.
+    await page.emulateMedia({ timezoneId: 'Asia/Hong_Kong' });
+    await page.addInitScript(() => {
+        const fixedDate = new Date('2026-03-20T10:00:00+08:00');
+        const OriginalDate = Date;
+        function MockDate(y, m, d, h, min, s, ms) {
+            if (arguments.length === 0) return new OriginalDate(fixedDate.getTime());
+            if (arguments.length === 1) return new OriginalDate(y);
+            return new OriginalDate(y, m, d, h, min, s, ms);
+        }
+        MockDate.now = () => fixedDate.getTime();
+        MockDate.UTC = OriginalDate.UTC;
+        MockDate.parse = OriginalDate.parse;
+        MockDate.prototype = OriginalDate.prototype;
+        window.Date = MockDate;
+    });
+
     // Intercept API calls and return fixtures
     await page.route('**/weather', async route => {
       await route.fulfill({ json: fixtures.weather });
@@ -16,6 +34,10 @@ test.describe('Dayline Observer Visual Snapshots', () => {
     });
     await page.route('**/news', async route => {
       await route.fulfill({ json: fixtures.news });
+    });
+
+    await page.route('**/news1', async route => {
+      await route.fulfill({ json: fixtures.newsEvening });
     });
 
     // Navigate to the local index.html
