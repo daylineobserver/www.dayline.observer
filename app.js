@@ -69,7 +69,7 @@ const UI = {
 
         // Mobile menu toggle
         const menuBtn = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
 
         if (menuBtn && mobileMenu) {
             // Initialize aria-expanded based on initial menu visibility
@@ -103,7 +103,7 @@ const UI = {
     },
 
     closeMobileMenu: function() {
-        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
         if (mobileMenu) {
             mobileMenu.classList.add('hidden');
             const menuToggleButton = document.getElementById('mobile-menu-button');

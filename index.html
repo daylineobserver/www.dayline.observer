@@ -76,8 +76,7 @@
                         id="mobile-menu-button"
                         aria-label="Toggle navigation menu"
                         aria-expanded="false"
-                        aria-controls="mobile-menu"
-                        onclick="(function(button){ var menu = document.getElementById('mobile-menu'); if (!menu) return; var isExpanded = button.getAttribute('aria-expanded') === 'true'; button.setAttribute('aria-expanded', (!isExpanded).toString()); menu.classList.toggle('hidden', isExpanded); })(this);">
+                        aria-controls="mobile-menu">
                     <svg class="w-6 h-6 text-gray-500"
                          fill="none"
                          stroke="currentColor"
@@ -92,7 +91,7 @@
         </div>
     </div>
     <!-- Mobile menu -->
-    <div class="hidden mobile-menu md:hidden border-t border-gray-100 bg-white">
+    <div id="mobile-menu" class="hidden mobile-menu md:hidden border-t border-gray-100 bg-white">
         <nav class="flex flex-col">
             <button class="tab-btn px-4 py-3 text-sm font-medium text-left text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:text-blue-600 transition-none"
                     id="mobile-tab-news">
