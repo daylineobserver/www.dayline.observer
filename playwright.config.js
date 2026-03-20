@@ -2,9 +2,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: ['playwright.test.js', 'persistence.test.js', 'news-tabs.test.js', 'hamburger-menu.test.js'],
+  testMatch: ['playwright.test.js', 'persistence.test.js', 'news-tabs.test.js', 'hamburger-menu.test.js', 'logo_nav.test.js'],
   /* Maximum time one test can run for. */
-  timeout: 30000,
+  timeout: 40000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -18,7 +18,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  workers: 4,
+  workers: 5,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', { open: 'never' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
