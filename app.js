@@ -155,17 +155,7 @@ const UI = {
     },
 
     initDarkMode: function() {
-        const isDark = localStorage.getItem('darkMode') === 'true' || 
-                      (!localStorage.getItem('darkMode') && 
-                       typeof window !== 'undefined' && 
-                       window.matchMedia && 
-                       window.matchMedia('(prefers-color-scheme: dark)').matches);
-        
-        if (isDark) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        // Handled in index.html for faster loading
     },
 
     toggleDarkMode: function() {
