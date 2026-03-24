@@ -112,8 +112,10 @@ const UI = {
         if (desktopToggle) {
             desktopToggle.addEventListener('click', () => {
                 this.toggleDarkMode();
-                desktopMenu.classList.add('hidden');
-                desktopMenuBtn.setAttribute('aria-expanded', 'false');
+                if (desktopMenu && desktopMenuBtn) {
+                    desktopMenu.classList.add('hidden');
+                    desktopMenuBtn.setAttribute('aria-expanded', 'false');
+                }
             });
         }
 
