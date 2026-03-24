@@ -401,6 +401,9 @@ const UI = {
                 aria-labelledby="${type === 'morning' ? 'news-morning' : 'news-evening'}"
             >
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">${title} ${data.formattedDate}${readingTime}</h2>
+                <div class="text-gray-500 text-sm italic mb-6">
+                    This news digest updates daily at around 7:00 - 8:00 ${type === 'morning' ? 'AM' : 'PM'}.
+                </div>
                 
                 <div class="space-y-6 text-gray-600 dark:text-zinc-300 markdown-content">
                     ${body}
