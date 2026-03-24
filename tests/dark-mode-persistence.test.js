@@ -1,11 +1,31 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
+import fixtures from '../fixtures.js';
 
 test.describe('Dark Mode Persistence', () => {
   test.beforeEach(async ({ page }) => {
+    // Intercept API calls and return fixtures
+    await page.route('**/weather', async route => {
+      await route.fulfill({ json: fixtures.weather });
+    });
+    await page.route('**/edb', async route => {
+      await route.fulfill({ json: fixtures.edb });
+    });
+    await page.route('**/aqi', async route => {
+      await route.fulfill({ json: fixtures.airQuality });
+    });
+    await page.route('**/news', async route => {
+      await route.fulfill({ json: fixtures.news });
+    });
+    await page.route('**/news1', async route => {
+      await route.fulfill({ json: fixtures.newsEvening });
+    });
+
     // Navigate to the local index.html
     const url = 'file://' + path.resolve(__dirname, '../index.html');
     await page.goto(url, { waitUntil: 'domcontentloaded' });
+    // Wait for the UI to be ready
+    await page.waitForSelector('#tab-news');
   });
 
   test('should persist dark mode after refresh', async ({ page }) => {
