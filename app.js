@@ -31,6 +31,9 @@ const UI = {
         if (!this.contentArea) this.contentArea = document.getElementById('content-area');
         if (this.tabs.length === 0) this.tabs = document.querySelectorAll('.tab-btn');
 
+        // Dark mode initialization
+        this.initDarkMode();
+
         if (typeof gtag === 'function') {
             gtag('event', 'page_view', {
                 page_title: document.title,
@@ -83,6 +86,46 @@ const UI = {
             });
         }
 
+        // Desktop dark mode hamburger menu toggle
+        const desktopMenuBtn = document.getElementById('desktop-dark-mode-button');
+        const desktopMenu = document.getElementById('desktop-dark-mode-menu');
+        
+        if (desktopMenuBtn && desktopMenu) {
+            desktopMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = desktopMenu.classList.toggle('hidden');
+                desktopMenuBtn.setAttribute('aria-expanded', (!isHidden).toString());
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!desktopMenu.classList.contains('hidden') && !desktopMenu.contains(e.target) && e.target !== desktopMenuBtn) {
+                    desktopMenu.classList.add('hidden');
+                    desktopMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Dark mode toggles
+        const desktopToggle = document.getElementById('desktop-toggle-dark');
+        const mobileToggle = document.getElementById('mobile-toggle-dark');
+
+        if (desktopToggle) {
+            desktopToggle.addEventListener('click', () => {
+                this.toggleDarkMode();
+                if (desktopMenu && desktopMenuBtn) {
+                    desktopMenu.classList.add('hidden');
+                    desktopMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                this.toggleDarkMode();
+                this.closeMobileMenu();
+            });
+        }
+
         // Default tab
         let savedTab = localStorage.getItem('activeTab');
         if (!savedTab || !['weather', 'edb', 'air-quality', 'news', 'news-evening'].includes(savedTab)) {
@@ -110,6 +153,21 @@ const UI = {
             if (menuToggleButton) {
                 menuToggleButton.setAttribute('aria-expanded', 'false');
             }
+        }
+    },
+
+    initDarkMode: function() {
+        // Handled in index.html for faster loading
+    },
+
+    toggleDarkMode: function() {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('darkMode', isDark);
+        
+        if (typeof gtag === 'function') {
+            gtag('event', 'dark_mode_toggle', {
+                enabled: isDark
+            });
         }
     },
 
@@ -225,24 +283,24 @@ const UI = {
         const body1 = this.parseMarkdown(data.body1);
 
         this.contentArea.innerHTML = `
-            <div class="alert-banner flex items-center gap-3">
-                <span class="text-blue-600">
+            <div class="alert-banner dark:bg-zinc-900 flex items-center gap-3">
+                <span class="text-blue-600 dark:text-blue-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </span>
-                <span class="text-gray-700 font-medium">${title}</span>
+                <span class="text-gray-700 dark:text-zinc-200 font-medium">${title}</span>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-2 card">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Weather ${data.formattedDate}</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">Weather ${data.formattedDate}</h2>
                     
-                    <div class="space-y-6 text-gray-600 markdown-content">
+                    <div class="space-y-6 text-gray-600 dark:text-zinc-300 markdown-content">
                         ${body}
                     </div>
                 </div>
 
                 <div class="card">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Summary</h2>
-                    <div class="text-gray-600 leading-relaxed markdown-content">${body1}</div>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">Summary</h2>
+                    <div class="text-gray-600 dark:text-zinc-300 leading-relaxed markdown-content">${body1}</div>
                 </div>
             </div>
         `;
@@ -254,9 +312,9 @@ const UI = {
 
         this.contentArea.innerHTML = `
             <div class="w-full card">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">${id.toUpperCase()} Alert ${data.formattedDate}</h2>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">${id.toUpperCase()} Alert ${data.formattedDate}</h2>
                 
-                <div class="space-y-6 text-gray-600 markdown-content">
+                <div class="space-y-6 text-gray-600 dark:text-zinc-300 markdown-content">
                     ${body}
                 </div>
             </div>
@@ -270,14 +328,14 @@ const UI = {
         this.contentArea.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-2 card">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Station Readings ${data.formattedDate}</h2>
-                    <div class="text-gray-600 leading-relaxed markdown-content">${body1}</div>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">Station Readings ${data.formattedDate}</h2>
+                    <div class="text-gray-600 dark:text-zinc-300 leading-relaxed markdown-content">${body1}</div>
                 </div>
 
                 <div class="card">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Commentary</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">Commentary</h2>
                     
-                    <div class="space-y-6 text-gray-600 markdown-content">
+                    <div class="space-y-6 text-gray-600 dark:text-zinc-300 markdown-content">
                         ${body}
                     </div>
                 </div>
@@ -307,15 +365,15 @@ const UI = {
             if (plainText) {
                 const words = plainText.split(/\s+/).length;
                 const minutes = Math.ceil(words / wordsPerMinute);
-                readingTime = `<span class="block md:inline-block text-gray-600 text-base font-normal md:ml-1"><span class="hidden md:inline">· </span>${minutes} min read</span>`;
+                readingTime = `<span class="block md:inline-block text-gray-600 dark:text-zinc-400 text-base font-normal md:ml-1"><span class="hidden md:inline">· </span>${minutes} min read</span>`;
             }
         }
 
         this.contentArea.innerHTML = `
             <div class="mb-8 flex justify-center">
-                <div class="inline-flex p-1 bg-gray-100 rounded-xl" role="tablist" aria-label="News time of day">
+                <div class="inline-flex p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl" role="tablist" aria-label="News time of day">
                     <button
-                        class="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-200 flex items-center ${type === 'morning' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}"
+                        class="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-200 flex items-center ${type === 'morning' ? 'bg-white dark:bg-zinc-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200'}"
                         id="news-morning"
                         role="tab"
                         aria-selected="${type === 'morning' ? 'true' : 'false'}"
@@ -326,7 +384,7 @@ const UI = {
                         Morning
                     </button>
                     <button
-                        class="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-200 flex items-center ${type === 'evening' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}"
+                        class="px-6 py-2 text-sm font-semibold rounded-lg transition-all duration-200 flex items-center ${type === 'evening' ? 'bg-white dark:bg-zinc-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200'}"
                         id="news-evening"
                         role="tab"
                         aria-selected="${type === 'evening' ? 'true' : 'false'}"
@@ -344,15 +402,15 @@ const UI = {
                 id="news-panel"
                 aria-labelledby="${type === 'morning' ? 'news-morning' : 'news-evening'}"
             >
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">${title} ${data.formattedDate}${readingTime}</h2>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">${title} ${data.formattedDate}${readingTime}</h2>
                 <div class="text-gray-500 text-sm italic mb-6">
                     This news digest updates daily at around 7:00 - 8:00 ${type === 'morning' ? 'AM' : 'PM'}.
                 </div>
                 
-                <div class="space-y-6 text-gray-600 markdown-content">
+                <div class="space-y-6 text-gray-600 dark:text-zinc-300 markdown-content">
                     ${body}
                 </div>
-                ${body1 ? `<div class="mt-6 pt-6 border-t border-gray-100 text-gray-500 text-sm italic">${body1}</div>` : ''}
+                ${body1 ? `<div class="mt-6 pt-6 border-t border-gray-100 dark:border-zinc-800 text-gray-500 dark:text-zinc-400 text-sm italic">${body1}</div>` : ''}
             </div>
         `;
 

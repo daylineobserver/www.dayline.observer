@@ -4,10 +4,21 @@
     border-bottom-width: 4px;
 }
 
+.dark #desktop-menu .tab-btn.active {
+    color: #f8fafc; /* slate-50 */
+    border-color: #3b82f6; /* blue-500 */
+}
+
 .mobile-menu .tab-btn.active {
     border-left: 4px solid #508ff3; /* blue-600 */
     color: #1e293b; /* gray-900 */
     background-color: #f9fafb; /* gray-50 */
+}
+
+.dark .mobile-menu .tab-btn.active {
+    color: #f8fafc; /* slate-50 */
+    background-color: #18181b; /* zinc-900 */
+    border-left-color: #3b82f6; /* blue-500 */
 }
 
 .card {
@@ -15,6 +26,12 @@
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     padding: 1.5rem;
+}
+
+.dark .card {
+    background: #18181b; /* zinc-900 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #27272a; /* zinc-800 */
 }
 
 .alert-banner {
@@ -25,6 +42,12 @@
     margin-bottom: 2rem;
     border-radius: 0.25rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dark .alert-banner {
+    background-color: #18181b;
+    border-color: #3b82f6;
+    color: #f8fafc;
 }
 
 .whitespace-pre-line {
