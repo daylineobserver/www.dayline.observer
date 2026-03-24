@@ -382,6 +382,67 @@ describe('UI.renderNews Reading Time', () => {
     });
 });
 
+describe('UI.renderNews Update Frequency Message', () => {
+    let contentArea;
+
+    beforeEach(() => {
+        document.body.innerHTML = '<div id="content-area"></div>';
+        contentArea = document.getElementById('content-area');
+        UI.contentArea = contentArea;
+        // Mock parseMarkdown if not already mocked in outer scope or needed here
+        UI.parseMarkdown = (text) => text;
+    });
+
+    test('should display morning update message on morning news page', () => {
+        const newsData = {
+            title: 'Morning News',
+            body: 'Some content',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderNews(newsData, 'morning');
+
+        const message = contentArea.querySelector('.text-gray-500.text-sm.italic');
+        expect(message).toBeTruthy();
+        expect(message.textContent.trim()).toBe('This news digest updates daily at around 7:00 - 8:00 AM.');
+    });
+
+    test('should display evening update message on evening news page', () => {
+        const newsData = {
+            title: 'Evening News',
+            body: 'Some content',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderNews(newsData, 'evening');
+
+        const message = contentArea.querySelector('.text-gray-500.text-sm.italic');
+        expect(message).toBeTruthy();
+        expect(message.textContent.trim()).toBe('This news digest updates daily at around 7:00 - 8:00 PM.');
+    });
+
+    test('message should be located below the title', () => {
+        const newsData = {
+            title: 'Morning News',
+            body: 'Some content',
+            formattedDate: '(10:00AM)'
+        };
+
+        UI.renderNews(newsData, 'morning');
+
+        const panel = contentArea.querySelector('#news-panel');
+        const children = Array.from(panel.children);
+        const h2Index = children.findIndex(child => child.tagName === 'H2');
+        const messageElement = Array.from(contentArea.querySelectorAll('.text-gray-500.text-sm.italic'))
+            .find(el => el.textContent.includes('This news digest updates daily'));
+        
+        const messageIndex = children.indexOf(messageElement);
+        
+        expect(h2Index).toBeGreaterThan(-1);
+        expect(messageIndex).toBe(h2Index + 1);
+    });
+});
+
 describe('Analytics Tracking', () => {
     let originalGtag;
 
