@@ -384,15 +384,23 @@ describe('UI.renderNews Reading Time', () => {
 
 describe('UI.renderNews Update Frequency Message', () => {
     let contentArea;
+    let originalParseMarkdown;
 
     beforeEach(() => {
+        // Save the original implementation so we can restore it after each test
+        originalParseMarkdown = UI.parseMarkdown;
+
         document.body.innerHTML = '<div id="content-area"></div>';
         contentArea = document.getElementById('content-area');
         UI.contentArea = contentArea;
-        // Mock parseMarkdown if not already mocked in outer scope or needed here
+        // Mock parseMarkdown for tests in this suite
         UI.parseMarkdown = (text) => text;
     });
 
+    afterEach(() => {
+        // Restore the original parseMarkdown implementation to avoid test leakage
+        UI.parseMarkdown = originalParseMarkdown;
+    });
     test('should display morning update message on morning news page', () => {
         const newsData = {
             title: 'Morning News',
@@ -436,6 +444,7 @@ describe('UI.renderNews Update Frequency Message', () => {
         const messageElement = Array.from(contentArea.querySelectorAll('.text-gray-500.text-sm.italic'))
             .find(el => el.textContent.includes('This news digest updates daily'));
         
+        expect(messageElement).toBeTruthy();
         const messageIndex = children.indexOf(messageElement);
         
         expect(h2Index).toBeGreaterThan(-1);
