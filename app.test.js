@@ -10,6 +10,20 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 global.DOMPurify = DOMPurify;
 global.document = window.document;
+global.window = window;
+
+if (!global.localStorage) {
+    const localStorageMock = (function() {
+        let store = {};
+        return {
+            getItem: jest.fn(key => store[key] || null),
+            setItem: jest.fn((key, value) => { store[key] = value.toString(); }),
+            clear: jest.fn(() => { store = {}; }),
+            removeItem: jest.fn(key => { delete store[key]; })
+        };
+    })();
+    Object.defineProperty(global, 'localStorage', { value: localStorageMock, configurable: true });
+}
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -110,7 +124,21 @@ describe('api methods', () => {
         jest.restoreAllMocks();
     });
 
-    test('getWeather should fetch from the correct URL', async () => {
+    test('getWeather should fetch from the correct URL with TC suffix', async () => {
+        global.localStorage.setItem('language', 'tc');
+        UI.translations = { tc: { errorLoading: 'Error' } };
+        global.fetch.mockResolvedValue({
+            json: jest.fn().mockResolvedValue(fixtures.weather)
+        });
+
+        const data = await api.getWeather();
+        expect(global.fetch).toHaveBeenCalledWith(API_URL + "/weathertc");
+        expect(data).toEqual(fixtures.weather);
+        global.localStorage.removeItem('language');
+    });
+
+    test('getWeather should fetch from the correct URL in English', async () => {
+        global.localStorage.setItem('language', 'en');
         global.fetch.mockResolvedValue({
             json: jest.fn().mockResolvedValue(fixtures.weather)
         });
@@ -170,6 +198,12 @@ describe('XSS Protection', () => {
         contentArea = document.getElementById('content-area');
         UI.contentArea = contentArea;
         originalMarked = global.marked;
+
+        // Pre-initialize translations to avoid fetch errors
+        UI.translations = {
+            en: { tagline: "Get updates that fit your day.", news: "News", weather: "Weather", school: "School", airQuality: "Air Quality", darkMode: "Dark Mode", lightMode: "Light Mode", switchToDarkMode: "Switch to Dark Mode", switchToLightMode: "Switch to Light Mode", contactUs: "Contact Us", rights: "Dayline Observer. All rights reserved. by", morning: "Morning", evening: "Evening", morningUpdate: "This news digest updates daily at around 7:00 - 8:00 AM.", eveningUpdate: "This news digest updates daily at around 7:00 - 8:00 PM.", errorLoading: "Error loading data.", weatherTitle: "Weather", summaryTitle: "Summary", stationReadings: "Station Readings", commentary: "Commentary", alert: "Alert", language: "Language", minRead: "min read" },
+            tc: { tagline: "獲取適合您一天的更新。", news: "新聞", weather: "天氣", school: "復課安排", airQuality: "空氣質素", darkMode: "深色模式", lightMode: "淺色模式", switchToDarkMode: "切換至深色模式", switchToLightMode: "切換至淺色模式", contactUs: "聯絡我們", rights: "Dayline Observer。保留所有權利。由", morning: "早報", evening: "晚報", morningUpdate: "新聞摘要每天在上午 7:00 - 8:00 左右更新。", eveningUpdate: "新聞摘要每天在下午 7:00 - 8:00 左右更新。", errorLoading: "載入數據時出錯。", weatherTitle: "天氣", summaryTitle: "摘要", stationReadings: "站點讀數", commentary: "簡評", alert: "警告", language: "語言", minRead: "分鐘閱讀" }
+        };
     });
 
     afterEach(() => {
@@ -311,6 +345,11 @@ describe('UI.renderNews Reading Time', () => {
         document.body.innerHTML = '<div id="content-area"></div>';
         contentArea = document.getElementById('content-area');
         UI.contentArea = contentArea;
+        // Pre-initialize translations to avoid fetch errors
+        UI.translations = {
+            en: { tagline: "Get updates that fit your day.", news: "News", weather: "Weather", school: "School", airQuality: "Air Quality", darkMode: "Dark Mode", lightMode: "Light Mode", switchToDarkMode: "Switch to Dark Mode", switchToLightMode: "Switch to Light Mode", contactUs: "Contact Us", rights: "Dayline Observer. All rights reserved. by", morning: "Morning", evening: "Evening", morningUpdate: "This news digest updates daily at around 7:00 - 8:00 AM.", eveningUpdate: "This news digest updates daily at around 7:00 - 8:00 PM.", errorLoading: "Error loading data.", weatherTitle: "Weather", summaryTitle: "Summary", stationReadings: "Station Readings", commentary: "Commentary", alert: "Alert", language: "Language", minRead: "min read" },
+            tc: { tagline: "獲取適合您一天的更新。", news: "新聞", weather: "天氣", school: "復課安排", airQuality: "空氣質素", darkMode: "深色模式", lightMode: "淺色模式", switchToDarkMode: "切換至深色模式", switchToLightMode: "切換至淺色模式", contactUs: "聯絡我們", rights: "Dayline Observer。保留所有權利。由", morning: "早報", evening: "晚報", morningUpdate: "新聞摘要每天在上午 7:00 - 8:00 左右更新。", eveningUpdate: "新聞摘要每天在下午 7:00 - 8:00 左右更新。", errorLoading: "載入數據時出錯。", weatherTitle: "天氣", summaryTitle: "摘要", stationReadings: "站點讀數", commentary: "簡評", alert: "警告", language: "語言", minRead: "分鐘閱讀" }
+        };
     });
 
     test('should calculate and display correct reading time for long articles', () => {
@@ -393,6 +432,13 @@ describe('UI.renderNews Update Frequency Message', () => {
         document.body.innerHTML = '<div id="content-area"></div>';
         contentArea = document.getElementById('content-area');
         UI.contentArea = contentArea;
+
+        // Pre-initialize translations to avoid fetch errors
+        UI.translations = {
+            en: { tagline: "Get updates that fit your day.", news: "News", weather: "Weather", school: "School", airQuality: "Air Quality", darkMode: "Dark Mode", lightMode: "Light Mode", switchToDarkMode: "Switch to Dark Mode", switchToLightMode: "Switch to Light Mode", contactUs: "Contact Us", rights: "Dayline Observer. All rights reserved. by", morning: "Morning", evening: "Evening", morningUpdate: "This news digest updates daily at around 7:00 - 8:00 AM.", eveningUpdate: "This news digest updates daily at around 7:00 - 8:00 PM.", errorLoading: "Error loading data.", weatherTitle: "Weather", summaryTitle: "Summary", stationReadings: "Station Readings", commentary: "Commentary", alert: "Alert", language: "Language", minRead: "min read" },
+            tc: { tagline: "獲取適合您一天的更新。", news: "新聞", weather: "天氣", school: "復課安排", airQuality: "空氣質素", darkMode: "深色模式", lightMode: "淺色模式", switchToDarkMode: "切換至深色模式", switchToLightMode: "切換至淺色模式", contactUs: "聯絡我們", rights: "Dayline Observer。保留所有權利。由", morning: "早報", evening: "晚報", morningUpdate: "新聞摘要每天在上午 7:00 - 8:00 左右更新。", eveningUpdate: "新聞摘要每天在下午 7:00 - 8:00 左右更新。", errorLoading: "載入數據時出錯。", weatherTitle: "天氣", summaryTitle: "摘要", stationReadings: "站點讀數", commentary: "簡評", alert: "警告", language: "語言", minRead: "分鐘閱讀" }
+        };
+
         // Mock parseMarkdown for tests in this suite
         UI.parseMarkdown = (text) => text;
     });
@@ -463,6 +509,12 @@ describe('Analytics Tracking', () => {
         // But app.test.js uses UI globally.
         Object.assign(UI, freshUI);
 
+        // Pre-initialize translations to avoid fetch errors
+        UI.translations = {
+            en: { tagline: "Get updates that fit your day.", news: "News", weather: "Weather", school: "School", airQuality: "Air Quality", darkMode: "Dark Mode", lightMode: "Light Mode", switchToDarkMode: "Switch to Dark Mode", switchToLightMode: "Switch to Light Mode", contactUs: "Contact Us", rights: "Dayline Observer. All rights reserved. by", morning: "Morning", evening: "Evening", morningUpdate: "This news digest updates daily at around 7:00 - 8:00 AM.", eveningUpdate: "This news digest updates daily at around 7:00 - 8:00 PM.", errorLoading: "Error loading data.", weatherTitle: "Weather", summaryTitle: "Summary", stationReadings: "Station Readings", commentary: "Commentary", alert: "Alert", language: "Language", minRead: "min read" },
+            tc: { tagline: "獲取適合您一天的更新。", news: "新聞", weather: "天氣", school: "復課安排", airQuality: "空氣質素", darkMode: "深色模式", lightMode: "淺色模式", switchToDarkMode: "切換至深色模式", switchToLightMode: "切換至淺色模式", contactUs: "聯絡我們", rights: "Dayline Observer。保留所有權利。由", morning: "早報", evening: "晚報", morningUpdate: "新聞摘要每天在上午 7:00 - 8:00 左右更新。", eveningUpdate: "新聞摘要每天在下午 7:00 - 8:00 左右更新。", errorLoading: "載入數據時出錯。", weatherTitle: "天氣", summaryTitle: "摘要", stationReadings: "站點讀數", commentary: "簡評", alert: "警告", language: "語言", minRead: "分鐘閱讀" }
+        };
+
         originalGtag = global.gtag;
         global.gtag = jest.fn();
         
@@ -475,22 +527,9 @@ describe('Analytics Tracking', () => {
             <button id="mobile-menu-button" aria-expanded="false"></button>
         `;
         
-        // Mock localStorage
-        if (!global.localStorage) {
-            const localStorageMock = (function() {
-                let store = {};
-                return {
-                    getItem: jest.fn(key => store[key] || null),
-                    setItem: jest.fn((key, value) => { store[key] = value.toString(); }),
-                    clear: jest.fn(() => { store = {}; }),
-                    removeItem: jest.fn(key => { delete store[key]; })
-                };
-            })();
-            Object.defineProperty(global, 'localStorage', { value: localStorageMock, configurable: true });
-        } else {
-            global.localStorage.getItem.mockClear();
-            global.localStorage.setItem.mockClear();
-        }
+        // Reset localStorage mocks
+        global.localStorage.getItem.mockClear();
+        global.localStorage.setItem.mockClear();
         
         // Reset UI properties
         UI.contentArea = null;
@@ -507,7 +546,7 @@ describe('Analytics Tracking', () => {
         jest.restoreAllMocks();
     });
 
-    test('UI.init should trigger page_view event exactly once', () => {
+    test('UI.init should trigger page_view event exactly once', async () => {
         // Mock global.window for page_location and page_path
         global.window = {
             location: {
@@ -519,7 +558,7 @@ describe('Analytics Tracking', () => {
         // Ensure gtag is available when UI.init is called
         global.gtag = jest.fn();
 
-        UI.init();
+        await UI.init();
         
         expect(global.gtag).toHaveBeenCalledWith('event', 'page_view', expect.objectContaining({
             page_title: document.title,
