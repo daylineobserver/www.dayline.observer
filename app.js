@@ -259,13 +259,13 @@ const UI = {
         if (mNavSchool) mNavSchool.textContent = t.school;
         if (mNavAir) mNavAir.textContent = t.airQuality;
 
-        const darkText = document.querySelector('#desktop-toggle-dark .dark\\:hidden');
-        const lightText = document.querySelector('#desktop-toggle-dark .hidden.dark\\:block');
+        const darkText = document.querySelector('#desktop-toggle-dark span.dark\\:hidden');
+        const lightText = document.querySelector('#desktop-toggle-dark span.hidden.dark\\:block');
         if (darkText) darkText.textContent = t.darkMode;
         if (lightText) lightText.textContent = t.lightMode;
 
-        const mDarkText = document.querySelector('#mobile-toggle-dark .dark\\:hidden');
-        const mLightText = document.querySelector('#mobile-toggle-dark .hidden.dark\\:block');
+        const mDarkText = document.querySelector('#mobile-toggle-dark span.dark\\:hidden');
+        const mLightText = document.querySelector('#mobile-toggle-dark span.hidden.dark\\:block');
         if (mDarkText) mDarkText.textContent = t.switchToDarkMode;
         if (mLightText) mLightText.textContent = t.switchToLightMode;
 
@@ -577,6 +577,9 @@ const UI = {
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-6">${title} ${data.formattedDate}${readingTime}</h2>
                 <div class="text-gray-500 text-sm italic mb-6">
                     ${type === 'morning' ? t.morningUpdate : t.eveningUpdate}
+                </div>
+                <div class="text-gray-500 text-sm italic mb-6">
+                    ${lang === 'tc' ? "由AI翻译" : ""}
                 </div>
                 
                 <div class="space-y-6 text-gray-600 dark:text-zinc-300 markdown-content">

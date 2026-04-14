@@ -96,7 +96,7 @@
                 <!-- Desktop dark mode toggle (Hamburger) -->
                 <div class="hidden md:block relative">
                     <button type="button" 
-                            class="p-2 rounded-md text-gray-500 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 focus:outline-none"
+                            class="p-2 rounded-md text-gray-500 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 focus:outline-none flex items-center"
                             id="desktop-dark-mode-button"
                             aria-label="Settings"
                             aria-expanded="false"
@@ -108,7 +108,7 @@
                     <div id="desktop-dark-mode-menu" 
                          class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-zinc-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
                         <div class="px-4 py-2 border-b border-gray-100 dark:border-zinc-700">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
                                 <button id="lang-en" class="text-xs font-medium px-2 py-1 rounded bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400">EN</button>
                                 <button id="lang-tc" class="text-xs font-medium px-2 py-1 rounded text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-700">繁中</button>
                             </div>
@@ -116,9 +116,6 @@
                         <button id="desktop-toggle-dark" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-700">
                             <svg class="dark:hidden w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                            </svg>
-                            <svg class="hidden dark:block w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                             </svg>
                             <span class="dark:hidden">Dark Mode</span>
                             <span class="hidden dark:block">Light Mode</span>
@@ -171,7 +168,7 @@
             
             <!-- Mobile Dark Mode Toggle Section -->
             <div class="border-t border-gray-100 dark:border-zinc-800 px-4 py-3 mt-4">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2 mb-4">
                     <span class="text-sm font-medium text-gray-500 dark:text-zinc-400" id="mobile-lang-label">Language</span>
                     <div class="flex space-x-2">
                         <button id="mobile-lang-en" class="text-xs font-medium px-3 py-1 rounded bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400">English</button>
@@ -185,8 +182,8 @@
                     <svg class="hidden dark:block w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                     </svg>
-                    <span class="dark:hidden">Switch to Dark Mode</span>
-                    <span class="hidden dark:block">Switch to Light Mode</span>
+                    <span class="dark:hidden">Dark Mode</span>
+                    <span class="hidden dark:block">Light Mode</span>
                 </button>
             </div>
         </nav>
