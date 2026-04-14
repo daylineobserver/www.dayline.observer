@@ -261,13 +261,16 @@ const UI = {
 
         const darkText = document.querySelector('#desktop-toggle-dark span.dark\\:hidden');
         const lightText = document.querySelector('#desktop-toggle-dark span.hidden.dark\\:block');
-        if (darkText) darkText.textContent = t.darkMode;
-        if (lightText) lightText.textContent = t.lightMode;
+        if (darkText) darkText.textContent = t.switchToNightMode;
+        if (lightText) lightText.textContent = t.switchToDayMode;
 
         const mDarkText = document.querySelector('#mobile-toggle-dark span.dark\\:hidden');
         const mLightText = document.querySelector('#mobile-toggle-dark span.hidden.dark\\:block');
-        if (mDarkText) mDarkText.textContent = t.switchToDarkMode;
-        if (mLightText) mLightText.textContent = t.switchToLightMode;
+        if (mDarkText) mDarkText.textContent = t.switchToNightMode;
+        if (mLightText) mLightText.textContent = t.switchToDayMode;
+
+        const desktopLangLabel = document.getElementById('desktop-lang-label');
+        if (desktopLangLabel) desktopLangLabel.textContent = t.language;
 
         const mobileLangLabel = document.getElementById('mobile-lang-label');
         if (mobileLangLabel) mobileLangLabel.textContent = t.language;
@@ -294,12 +297,12 @@ const UI = {
             }
         };
 
-        const desktopActive = "text-xs font-medium px-2 py-1 rounded bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400";
-        const desktopInactive = "text-xs font-medium px-2 py-1 rounded text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-700";
+        const desktopActive = "flex items-center w-full px-2 py-2 text-sm rounded-md transition-colors bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400 font-medium";
+        const desktopInactive = "flex items-center w-full px-2 py-2 text-sm rounded-md transition-colors text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-700";
         updateLangButtons(document.getElementById('lang-en'), document.getElementById('lang-tc'), desktopActive, desktopInactive);
 
-        const mobileActive = "text-xs font-medium px-3 py-1 rounded bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400";
-        const mobileInactive = "text-xs font-medium px-3 py-1 rounded text-gray-500 dark:text-zinc-400 bg-gray-50 dark:bg-zinc-800";
+        const mobileActive = "flex items-center w-full px-3 py-3 text-sm rounded-md transition-colors bg-blue-50 dark:bg-zinc-700 text-blue-600 dark:text-blue-400 font-medium";
+        const mobileInactive = "flex items-center w-full px-3 py-3 text-sm rounded-md transition-colors text-gray-500 dark:text-zinc-400 bg-gray-50 dark:bg-zinc-800";
         updateLangButtons(document.getElementById('mobile-lang-en'), document.getElementById('mobile-lang-tc'), mobileActive, mobileInactive);
     },
 
