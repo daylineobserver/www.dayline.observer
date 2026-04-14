@@ -40,14 +40,14 @@ const UI = {
 
         // Fetch translations
         try {
-            const response = await fetch('/resources/localization.json');
+            const response = await fetch('resources/localization.json');
             this.translations = await response.json();
         } catch (error) {
             console.error('Failed to load translations:', error);
             // Fallback translations if fetch fails
             this.translations = {
-                en: { tagline: "Get updates that fit your day.", news: "News", weather: "Weather", school: "School", airQuality: "Air Quality", darkMode: "Dark Mode", lightMode: "Light Mode", switchToDarkMode: "Switch to Dark Mode", switchToLightMode: "Switch to Light Mode", contactUs: "Contact Us", rights: "Dayline Observer. All rights reserved. by", morning: "Morning", evening: "Evening", morningUpdate: "This news digest updates daily at around 7:00 - 8:00 AM.", eveningUpdate: "This news digest updates daily at around 7:00 - 8:00 PM.", errorLoading: "Error loading data.", weatherTitle: "Weather", summaryTitle: "Summary", stationReadings: "Station Readings", commentary: "Commentary", alert: "Alert", language: "Language", minRead: "min read" },
-                tc: { tagline: "獲取適合您一天的更新。", news: "新聞", weather: "天氣", school: "復課安排", airQuality: "空氣質素", darkMode: "深色模式", lightMode: "淺色模式", switchToDarkMode: "切換至深色模式", switchToLightMode: "切換至淺色模式", contactUs: "聯絡我們", rights: "Dayline Observer。保留所有權利。由", morning: "早報", evening: "晚報", morningUpdate: "新聞摘要每天在上午 7:00 - 8:00 左右更新。", eveningUpdate: "新聞摘要每天在下午 7:00 - 8:00 左右更新。", errorLoading: "載入數據時出錯。", weatherTitle: "天氣", summaryTitle: "摘要", stationReadings: "站點讀數", commentary: "簡評", alert: "警告", language: "語言", minRead: "分鐘閱讀" }
+                en: { tagline: "Get updates that fit your day.", news: "News", weather: "Weather", school: "School", airQuality: "Air Quality", darkMode: "Dark Mode", lightMode: "Light Mode", switchToNightMode: "Switch to Dark Mode", switchToDayMode: "Switch to Light Mode", contactUs: "Contact Us", rights: "Dayline Observer. All rights reserved. by", morning: "Morning", evening: "Evening", morningUpdate: "This news digest updates daily at around 7:00 - 8:00 AM.", eveningUpdate: "This news digest updates daily at around 7:00 - 8:00 PM.", errorLoading: "Error loading data.", weatherTitle: "Weather", summaryTitle: "Summary", stationReadings: "Station Readings", commentary: "Commentary", alert: "Alert", language: "Language", minRead: "min read" },
+                tc: { tagline: "獲取適合您一天的更新。", news: "新聞", weather: "天氣", school: "復課安排", airQuality: "空氣質素", darkMode: "深色模式", lightMode: "淺色模式", switchToNightMode: "切換至深色模式", switchToDayMode: "切換至淺色模式", contactUs: "聯絡我們", rights: "Dayline Observer。保留所有權利。由", morning: "早報", evening: "晚報", morningUpdate: "新聞摘要每天在上午 7:00 - 8:00 左右更新。", eveningUpdate: "新聞摘要每天在下午 7:00 - 8:00 左右更新。", errorLoading: "載入數據時出錯。", weatherTitle: "天氣", summaryTitle: "摘要", stationReadings: "站點讀數", commentary: "簡評", alert: "警告", language: "語言", minRead: "分鐘閱讀" }
             };
         }
 
@@ -233,7 +233,7 @@ const UI = {
         const t = this.translations[lang];
 
         // Update HTML lang attribute
-        document.documentElement.setAttribute('lang', lang);
+        document.documentElement.setAttribute('lang', lang === 'tc' ? 'zh-Hant' : 'en');
 
         // Update UI elements
         const tagline = document.querySelector('.bg-white.dark\\:bg-zinc-900.border-b div');
@@ -581,9 +581,11 @@ const UI = {
                 <div class="text-gray-500 text-sm italic mb-6">
                     ${type === 'morning' ? t.morningUpdate : t.eveningUpdate}
                 </div>
-                <div class="text-gray-500 text-sm italic mb-6">
-                    ${lang === 'tc' ? "由AI翻译" : ""}
-                </div>
+                ${lang === 'tc'
+                    ? `<div class="text-gray-500 text-sm italic mb-6">由AI翻译</div>`
+                    : ''
+                }
+
                 
                 <div class="space-y-6 text-gray-600 dark:text-zinc-300 markdown-content">
                     ${body}
